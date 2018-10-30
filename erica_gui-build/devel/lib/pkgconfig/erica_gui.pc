@@ -1,0 +1,8 @@
+prefix=/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/devel
+
+Name: erica_gui
+Description: Description of erica_gui
+Version: 0.1.0
+Cflags: 
+Libs: -L/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/devel/lib 
+Requires: 

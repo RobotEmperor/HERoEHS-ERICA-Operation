@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: erica_gui
+Description: Description of erica_gui
+Version: 0.1.0
+Cflags: 
+Libs: -L/usr/local/lib 
+Requires: 
