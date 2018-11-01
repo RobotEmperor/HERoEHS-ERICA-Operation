@@ -158,6 +158,208 @@ void MainWindow::on_initial_pose_clicked()
 
 }
 
+//manual control
+
+void MainWindow::on_x_plus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0.005;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+void MainWindow::on_x_minus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = -0.005;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+
+void MainWindow::on_y_plus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = 0.005;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+void MainWindow::on_y_minus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = -0.005;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+
+void MainWindow::on_z_plus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = 0.005;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+void MainWindow::on_z_minus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = -0.005;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+
+void MainWindow::on_roll_plus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0.01,0,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+void MainWindow::on_roll_minus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(-0.01,0,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+
+void MainWindow::on_pitch_plus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0.01,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+void MainWindow::on_pitch_minus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,-0.01,0);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+
+void MainWindow::on_yaw_plus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0.01);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+void MainWindow::on_yaw_minus_clicked()
+{
+  qnode.arm_displacement_msg.pose.position.x = 0;
+  qnode.arm_displacement_msg.pose.position.y = 0;
+  qnode.arm_displacement_msg.pose.position.z = 0;
+
+  Eigen::Quaterniond rqyToQ;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,-0.01);
+
+  qnode.arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  qnode.arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  qnode.arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  qnode.arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+  qnode.arm_displacement_pub.publish(qnode.arm_displacement_msg);
+}
+
+
 /*****************************************************************************
 ** Implementation [Configuration]
 *****************************************************************************/

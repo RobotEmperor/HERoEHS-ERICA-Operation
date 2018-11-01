@@ -10,12 +10,9 @@
 ** Includes
 *****************************************************************************/
 
-#include <ros/ros.h>
-#include <ros/network.h>
-#include <string>
-#include <std_msgs/String.h>
-#include <sstream>
+
 #include "../include/erica_gui/qnode.hpp"
+
 
 /*****************************************************************************
 ** Namespaces
@@ -50,6 +47,9 @@ bool QNode::init() {
 	//base module //
 	  init_pose_pub = n.advertise<std_msgs::String>("/heroehs/init_pose",1);
 
+
+	  //arm_module
+	  arm_displacement_pub = n.advertise<erica_arm_module_msgs::ArmCmd>("/heroehs/arm/displacement",1);
 
 	status_sub = n.subscribe("/heroehs/status", 10, &QNode::StatusMsgsCallBack, this);
 

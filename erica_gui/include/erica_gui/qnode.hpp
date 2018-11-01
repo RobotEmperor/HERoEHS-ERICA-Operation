@@ -20,11 +20,13 @@
 //    https://bugreports.qt.io/browse/QTBUG-22829
 #ifndef Q_MOC_RUN
 #include <ros/ros.h>
-#endif
+
 #include <string>
 #include <QThread>
 #include <QStringListModel>
 #include "std_msgs/String.h"
+#include "erica_arm_module_msgs/ArmCmd.h"
+#endif
 
 
 /*****************************************************************************
@@ -65,11 +67,15 @@ public:
   ros::Publisher enable_module_pub;
   ros::Publisher init_pose_pub;
 
+  ros::Publisher arm_displacement_pub;
+
 
   ros::Subscriber status_sub;
 
   std_msgs::String enable_module_msg;
   std_msgs::String init_pose_msg;
+
+  erica_arm_module_msgs::ArmCmd arm_displacement_msg;
 
 
 

@@ -11,10 +11,12 @@
 /*****************************************************************************
 ** Includes
 *****************************************************************************/
-
+#ifndef Q_MOC_RUN
 #include <QtGui/QMainWindow>
 #include "ui_main_window.h"
 #include "qnode.hpp"
+#include "robotis_math/robotis_math.h"
+#endif
 
 /*****************************************************************************
 ** Namespace
@@ -56,6 +58,26 @@ public Q_SLOTS:
 
 	void on_initial_pose_clicked();
 	void on_none_module_clicked();
+
+	//manual control
+
+	void on_x_plus_clicked();
+	void on_x_minus_clicked();
+
+	void on_y_plus_clicked();
+	void on_y_minus_clicked();
+
+	void on_z_plus_clicked();
+	void on_z_minus_clicked();
+
+	void on_roll_plus_clicked();
+	void on_roll_minus_clicked();
+
+	void on_pitch_plus_clicked();
+	void on_pitch_minus_clicked();
+
+	void on_yaw_plus_clicked();
+	void on_yaw_minus_clicked();
 
     /******************************************
     ** Manual connections
