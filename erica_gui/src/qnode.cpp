@@ -121,9 +121,9 @@ void QNode::log( const LogLevel &level, const std::string &msg) {
 	Q_EMIT loggingUpdated(); // used to readjust the scrollbar
 }
 
-void QNode::StatusMsgsCallBack(const std_msgs::String::ConstPtr& msg)
+void QNode::StatusMsgsCallBack(const robotis_controller_msgs::StatusMsg::ConstPtr& msg)
 {
-    log(Info, msg->data);
+    log(Info, msg->status_msg);
 }
 
 }  // namespace erica_gui

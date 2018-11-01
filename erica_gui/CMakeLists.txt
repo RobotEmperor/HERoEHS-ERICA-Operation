@@ -12,6 +12,7 @@ project(erica_gui)
 # qt_build provides the qt cmake glue, roscpp the comms for a default talker
 find_package(catkin REQUIRED COMPONENTS 
 robotis_math 
+robotis_controller_msgs 
 erica_arm_module_msgs 
 qt_build 
 roscpp

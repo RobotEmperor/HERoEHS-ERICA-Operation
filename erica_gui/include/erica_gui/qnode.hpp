@@ -26,6 +26,7 @@
 #include <QStringListModel>
 #include "std_msgs/String.h"
 #include "erica_arm_module_msgs/ArmCmd.h"
+#include "robotis_controller_msgs/StatusMsg.h"
 #endif
 
 
@@ -80,7 +81,7 @@ public:
 
 
   //callback
-  void StatusMsgsCallBack(const std_msgs::String::ConstPtr& msg);
+  void StatusMsgsCallBack(const robotis_controller_msgs::StatusMsg::ConstPtr& msg);
 
 Q_SIGNALS:
 	void loggingUpdated();
