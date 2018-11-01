@@ -1,0 +1,14 @@
+# erica action script
+# the argument of "play" cmd is action file page number.
+# the unit for sleep is ms
+# the mp3 file is in the ppc
+ 
+# Example
+#script2: 
+#     cmd1: {cmd_name: play,  cmd_arg: 2}
+#     cmd2: {cmd_name: sleep, cmd_arg: 1800}
+#     cmd3: {cmd_name: mp3,   cmd_arg: "/home/robotis/Music/thormang_mp3/hello_kor.mp3"}
+#     cmd4: {cmd_name: sleep, cmd_arg: 1100}
+#     cmd5: {cmd_name: mp3,   cmd_arg: "/home/robotis/Music/thormang_mp3/i_am_thormang_kor.mp3"}
+
+
