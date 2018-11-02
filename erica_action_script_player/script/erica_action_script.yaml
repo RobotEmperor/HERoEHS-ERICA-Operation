@@ -12,3 +12,6 @@
 #     cmd5: {cmd_name: mp3,   cmd_arg: "/home/robotis/Music/thormang_mp3/i_am_thormang_kor.mp3"}
 
 
+script1: 
+  joint_name: [r_arm_sh_p, r_arm_sh_r, r_arm_sh_y, r_arm_el_p, r_arm_wr_p, r_arm_wr_r]
+  cmd1: {cmd_name: play,  cmd_arg: 1}

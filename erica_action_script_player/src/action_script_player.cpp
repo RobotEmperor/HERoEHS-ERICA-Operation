@@ -322,7 +322,7 @@ int main(int argc, char **argv)
   g_is_running_client     = ros_node_handle.serviceClient<erica_action_module_msgs::IsRunning>("/heroehs/action/is_running");
 
   //Setting action script file path
-  std::string temp_action_script_file_path = ros::package::getPath("erica_action_script_player") + "/script/action_script.yaml";
+  std::string temp_action_script_file_path = ros::package::getPath("erica_action_script_player") + "/script/erica_action_script.yaml";
   if (ros_node_handle.getParam("action_script_file_path", g_action_script_file_path) == false)
   {
     g_action_script_file_path = temp_action_script_file_path;
