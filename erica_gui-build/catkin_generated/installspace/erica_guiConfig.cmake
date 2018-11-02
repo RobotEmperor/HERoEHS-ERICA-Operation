@@ -67,8 +67,8 @@ set(erica_gui_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(erica_gui_SOURCE_PREFIX /home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui)
-  set(erica_gui_DEVEL_PREFIX /home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/devel)
+  set(erica_gui_SOURCE_PREFIX /home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui)
+  set(erica_gui_DEVEL_PREFIX /home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/devel)
   set(erica_gui_INSTALL_PREFIX "")
   set(erica_gui_PREFIX ${erica_gui_DEVEL_PREFIX})
 else()
@@ -129,7 +129,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /usr/local/lib;/home/robotemperor/catkin_ws/devel/lib;/opt/ros/kinetic/lib)
+    foreach(path /usr/local/lib;/home/heroehs/catkin_ws/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

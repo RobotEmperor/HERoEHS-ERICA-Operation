@@ -1,4 +1,4 @@
-# Install script for directory: /home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui
+# Install script for directory: /home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -51,7 +51,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local" TYPE PROGRAM FILES "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/_setup_util.py")
+file(INSTALL DESTINATION "/usr/local" TYPE PROGRAM FILES "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/_setup_util.py")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -63,7 +63,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local" TYPE PROGRAM FILES "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/env.sh")
+file(INSTALL DESTINATION "/usr/local" TYPE PROGRAM FILES "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/env.sh")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -75,7 +75,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/setup.bash")
+file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/setup.bash")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -87,7 +87,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/setup.sh")
+file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/setup.sh")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -99,7 +99,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/setup.zsh")
+file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/setup.zsh")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -111,22 +111,22 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/.rosinstall")
+file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/.rosinstall")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/erica_gui.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/erica_gui.pc")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/erica_gui/cmake" TYPE FILE FILES
-    "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/erica_guiConfig.cmake"
-    "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/erica_guiConfig-version.cmake"
+    "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/erica_guiConfig.cmake"
+    "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/catkin_generated/installspace/erica_guiConfig-version.cmake"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/erica_gui" TYPE FILE FILES "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/erica_gui" TYPE FILE FILES "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui/package.xml")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -136,12 +136,12 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/erica_gui/erica_gui"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/erica_gui" TYPE EXECUTABLE FILES "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/devel/lib/erica_gui/erica_gui")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/erica_gui" TYPE EXECUTABLE FILES "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/devel/lib/erica_gui/erica_gui")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/erica_gui/erica_gui" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/erica_gui/erica_gui")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/erica_gui/erica_gui"
-         OLD_RPATH "/opt/ros/kinetic/lib:"
+         OLD_RPATH "/home/heroehs/catkin_ws/devel/lib:/opt/ros/kinetic/lib:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/erica_gui/erica_gui")
@@ -151,7 +151,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/gtest/cmake_install.cmake")
+  include("/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/gtest/cmake_install.cmake")
 
 endif()
 
@@ -163,5 +163,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

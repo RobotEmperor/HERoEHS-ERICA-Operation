@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
 # Source directory: /usr/src/gtest
-# Build directory: /home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/gtest/gtest
+# Build directory: /home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/gtest/gtest
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.

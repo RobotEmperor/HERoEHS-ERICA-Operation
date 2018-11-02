@@ -1,10 +1,13 @@
+-I/home/heroehs/catkin_ws/devel/include
+-I/home/heroehs/catkin_ws/src/ROBOTIS-Math/robotis_math/include
 -I/opt/ros/kinetic/include
 -I/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp
+-I/usr/include/eigen3
 -I/usr/include
 -I/usr/include/qt4
 -I/usr/include/qt4/QtGui
 -I/usr/include/qt4/QtCore
--I/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build
+-I/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build
 -DROS_PACKAGE_NAME="erica_gui"
 -DROSCONSOLE_BACKEND_LOG4CXX
 -D$<$<NOT:$<CONFIG:Debug>>:QT_NO_DEBUG>
@@ -12,5 +15,5 @@
 -DQT_CORE_LIB
 -DQT_NO_KEYWORDS
 -o
-/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/include/erica_gui/moc_qnode.cxx
-/home/robotemperor/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui/include/erica_gui/qnode.hpp
+/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui-build/include/erica_gui/moc_qnode.cxx
+/home/heroehs/catkin_ws/src/ERICA/HERoEHS-ERICA-Operation/erica_gui/include/erica_gui/qnode.hpp
