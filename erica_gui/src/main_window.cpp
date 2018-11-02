@@ -132,6 +132,7 @@ void MainWindow::on_base_module_clicked()
 
 void MainWindow::on_arm_module_clicked()
 {
+  qnode.arm_displacement_msg.name = "left";
   qnode.enable_module_msg.data = "arm_module";
   qnode.enable_module_pub.publish(qnode.enable_module_msg);
 }
@@ -162,7 +163,8 @@ void MainWindow::on_initial_pose_clicked()
 
 void MainWindow::on_x_plus_clicked()
 {
-  qnode.arm_displacement_msg.pose.position.x = 0.005;
+  qnode.arm_displacement_msg.name = "left";
+  qnode.arm_displacement_msg.pose.position.x = 0.001;
   qnode.arm_displacement_msg.pose.position.y = 0;
   qnode.arm_displacement_msg.pose.position.z = 0;
 
@@ -179,7 +181,7 @@ void MainWindow::on_x_plus_clicked()
 }
 void MainWindow::on_x_minus_clicked()
 {
-  qnode.arm_displacement_msg.pose.position.x = -0.005;
+  qnode.arm_displacement_msg.pose.position.x = -0.001;
   qnode.arm_displacement_msg.pose.position.y = 0;
   qnode.arm_displacement_msg.pose.position.z = 0;
 
@@ -197,7 +199,7 @@ void MainWindow::on_x_minus_clicked()
 void MainWindow::on_y_plus_clicked()
 {
   qnode.arm_displacement_msg.pose.position.x = 0;
-  qnode.arm_displacement_msg.pose.position.y = 0.005;
+  qnode.arm_displacement_msg.pose.position.y = 0.001;
   qnode.arm_displacement_msg.pose.position.z = 0;
 
   Eigen::Quaterniond rqyToQ;
@@ -213,7 +215,7 @@ void MainWindow::on_y_plus_clicked()
 void MainWindow::on_y_minus_clicked()
 {
   qnode.arm_displacement_msg.pose.position.x = 0;
-  qnode.arm_displacement_msg.pose.position.y = -0.005;
+  qnode.arm_displacement_msg.pose.position.y = -0.001;
   qnode.arm_displacement_msg.pose.position.z = 0;
 
   Eigen::Quaterniond rqyToQ;
@@ -231,7 +233,7 @@ void MainWindow::on_z_plus_clicked()
 {
   qnode.arm_displacement_msg.pose.position.x = 0;
   qnode.arm_displacement_msg.pose.position.y = 0;
-  qnode.arm_displacement_msg.pose.position.z = 0.005;
+  qnode.arm_displacement_msg.pose.position.z = 0.001;
 
   Eigen::Quaterniond rqyToQ;
 
@@ -247,7 +249,7 @@ void MainWindow::on_z_minus_clicked()
 {
   qnode.arm_displacement_msg.pose.position.x = 0;
   qnode.arm_displacement_msg.pose.position.y = 0;
-  qnode.arm_displacement_msg.pose.position.z = -0.005;
+  qnode.arm_displacement_msg.pose.position.z = -0.001;
 
   Eigen::Quaterniond rqyToQ;
 
