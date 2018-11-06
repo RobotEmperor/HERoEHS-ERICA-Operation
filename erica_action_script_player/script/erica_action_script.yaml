@@ -20,11 +20,13 @@ script1:
   cmd3: {cmd_name: sleep, cmd_arg: 2000}
   cmd4: {cmd_name: mp3, cmd_arg: "/home/nvidia/Music/erica/from_erica_alice.MP3"}
 
-#script2: 
-
+script2:
+  joint_name: [head_pitch]
+  cmd1: {cmd_name: play,  cmd_arg: 10}
+  cmd2: {cmd_name: mp3, cmd_arg: "/home/nvidia/Music/erica/thank_you.MP3"}
 
 script3: 
   cmd1: {cmd_name: mp3, cmd_arg: "/home/nvidia/Music/erica/look_at_here.MP3"} 
   
-script4: 
-  cmd1: {cmd_name: mp3, cmd_arg: "/home/nvidia/Music/erica/thank_you.MP3"}
+#script4: 
+
