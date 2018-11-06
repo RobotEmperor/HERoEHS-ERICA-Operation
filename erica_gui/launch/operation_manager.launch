@@ -4,5 +4,6 @@
         <!-- erica gui -->
     <node name="erica_gui" pkg="erica_gui" type="erica_gui" output="screen"/>
     <node name="joy_node" pkg="joy" type="joy_node" output="screen"/>
+    <node name="erica_action_script_player" pkg="erica_action_script_player" type="erica_action_script_player" output="screen"/>
 </launch>
 
