@@ -56,6 +56,7 @@
   <build_depend>robotis_math</build_depend>
   <build_depend>robotis_framework_common</build_depend>
   <build_depend>robotis_controller_msgs</build_depend>
+  <build_depend>erica_perception_msgs</build_depend>
   <build_depend>yaml-cpp</build_depend>
   <build_depend>heroehs_math</build_depend>
 

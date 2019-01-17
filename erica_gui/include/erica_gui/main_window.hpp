@@ -41,15 +41,13 @@ public:
 	void WriteSettings(); // Save qt program settings when closing
 
 	void closeEvent(QCloseEvent *event); // Overloaded function
-	void showNoMasterMessage();
+	void savePeoplePosition(QString x, QString y, QString z);
 
 public Q_SLOTS:
 	/******************************************
 	** Auto-connections (connectSlotsByName())
 	*******************************************/
-	void on_actionAbout_triggered();
-	void on_button_connect_clicked(bool check );
-	void on_checkbox_use_environment_stateChanged(int state);
+
 
 	void on_base_module_clicked();
 	void on_arm_module_clicked();
@@ -79,10 +77,13 @@ public Q_SLOTS:
 	void on_yaw_plus_clicked();
 	void on_yaw_minus_clicked();
 
+  void on_motion_num_send_button_clicked();
+  void on_dummy_send_button_clicked();
+
     /******************************************
     ** Manual connections
     *******************************************/
-    void updateLoggingView(); // no idea why this can't connect automatically
+
 
 private:
 	Ui::MainWindowDesign ui;

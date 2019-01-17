@@ -27,6 +27,9 @@
 #include "std_msgs/String.h"
 #include "erica_arm_module_msgs/ArmCmd.h"
 #include "robotis_controller_msgs/StatusMsg.h"
+#include <std_msgs/Int32.h>
+#include "erica_perception_msgs/PeoplePositionArray.h"
+#include "geometry_msgs/Point32.h"
 #endif
 
 
@@ -69,15 +72,22 @@ public:
   ros::Publisher init_pose_pub;
 
   ros::Publisher arm_displacement_pub;
+  ros::Publisher script_number_pub;
 
 
   ros::Subscriber status_sub;
+  ros::Publisher g_people_position_pub;
+
 
   std_msgs::String enable_module_msg;
   std_msgs::String init_pose_msg;
 
   erica_arm_module_msgs::ArmCmd arm_displacement_msg;
 
+  std_msgs::Int32 script_number_msg;
+
+  erica_perception_msgs::PeoplePositionArray people_position_msg;
+  geometry_msgs::Point32 temp_people_position;
 
 
   //callback

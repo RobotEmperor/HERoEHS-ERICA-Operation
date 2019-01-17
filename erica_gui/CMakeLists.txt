@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
 robotis_math 
 robotis_controller_msgs 
 erica_arm_module_msgs 
+erica_perception_msgs
 qt_build 
 roscpp
 )
