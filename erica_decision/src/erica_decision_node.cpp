@@ -37,7 +37,7 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   }
 
   // if person is close, the robot stops.
-  if(fabs(desired_vector_msg.position.x) <= 0.5 && fabs(desired_vector_msg.position.y) <= 0.5)
+  if(fabs(desired_vector_msg.position.x) <= 0.7 && fabs(desired_vector_msg.position.y) <= 0.7)
   {
     desired_vector_msg.position.x = 0;
     desired_vector_msg.position.y = 0;
@@ -50,6 +50,12 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   }
   else
   {
+    if(fabs(desired_vector_msg.position.x) > 5 && fabs(desired_vector_msg.position.y) > 5)
+    {
+      desired_vector_msg.position.x = 0;
+      desired_vector_msg.position.y = 0;
+      return;
+    }
     //unit vector
     double temp_absolute_size = 0.0;
     temp_absolute_size = sqrt(pow(desired_vector_msg.position.x,2)+pow(desired_vector_msg.position.y,2));
