@@ -19,7 +19,6 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   {
     desired_vector_msg.position.x = 0;
     desired_vector_msg.position.y = 0;
-
     return;
   }
   else
@@ -37,18 +36,22 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
     }
   }
 
-  //일정 이상 가까워지면, 정지
-  if(desired_vector_msg.position.x <= 1 && desired_vector_msg.position.y <= 1)
+  // if person is close, the robot stops.
+  if(fabs(desired_vector_msg.position.x) <= 0.5 && fabs(desired_vector_msg.position.y) <= 0.5)
   {
     desired_vector_msg.position.x = 0;
     desired_vector_msg.position.y = 0;
+    return;
+  }
+
+  if(fabs(desired_vector_msg.position.x) <= 1 && fabs(desired_vector_msg.position.y) <= 1)
+  {
     return;
   }
   else
   {
     //unit vector
     double temp_absolute_size = 0.0;
-
     temp_absolute_size = sqrt(pow(desired_vector_msg.position.x,2)+pow(desired_vector_msg.position.y,2));
     desired_vector_msg.position.x = desired_vector_msg.position.x/temp_absolute_size ;
     desired_vector_msg.position.y = desired_vector_msg.position.y/temp_absolute_size ;
@@ -87,13 +90,10 @@ int main (int argc, char **argv)
   //sub
   people_position_sub = nh.subscribe("/erica/people_position", 1, people_position_callback);
 
-
+  ros::Rate r(100.0);
   while(ros::ok())
   {
-
-    simulation_rviz(desired_vector_msg);
-
-    usleep(1000);
+    //simulation_rviz(desired_vector_msg);
     /*printf("---------------------------------------\n");
     printf("DIR Motor1 :: %d \n", motor_cmd_msg_1.motor_desired_direction);
     printf("DIR Motor2 :: %d \n", motor_cmd_msg_2.motor_desired_direction);
@@ -107,9 +107,10 @@ int main (int argc, char **argv)
 
 
      */
-    desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
-    desired_vector_pub.publish(desired_vector_msg);
+    //desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
+    //desired_vector_pub.publish(desired_vector_msg);
     ros::spinOnce();
+    r.sleep();
   }
   return 0;
 }
@@ -120,16 +121,16 @@ int main (int argc, char **argv)
 
 // C++ program to create target string, starting from 
 // random string using Genetic Algorithm 
-  
+
 #include <bits/stdc++.h> 
 using namespace std; 
-  
+
 // Number of individuals in each generation 
-  
+
 // Valid Genes 
 const string GENES = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP"
 "QRSTUVWXYZ 1234567890, .-;:_!\"#%&/()=?@${[]}"; 
-  
+
 // Target string to be generated 
 const string TARGET = "I love GeeksforGeeks"; 
 
@@ -142,7 +143,7 @@ void initialize()
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
 {
 }
-  
+
 // Function to generate random numbers in given range  
 int random_num(int start, int end) 
 { 
@@ -150,7 +151,7 @@ int random_num(int start, int end)
     int random_int = start+(rand()%range); 
     return random_int; 
 } 
-  
+
 // Create random genes for mutation 
 char mutated_genes() 
 { 
@@ -158,7 +159,7 @@ char mutated_genes()
     int r = random_num(0, len-1); 
     return GENES[r]; 
 } 
-  
+
 // create chromosome or string of genes 
 string create_gnome() 
 { 
@@ -168,7 +169,7 @@ string create_gnome()
         gnome += mutated_genes(); 
     return gnome; 
 } 
-  
+
 // Class representing individual in population 
 class Individual 
 { 
@@ -179,47 +180,47 @@ public:
     Individual mate(Individual parent2); 
     int cal_fitness(); 
 }; 
-  
+
 Individual::Individual(string chromosome) 
 { 
     this->chromosome = chromosome; 
     fitness = cal_fitness();  
 }; 
-  
+
 // Perform mating and produce new offspring 
 Individual Individual::mate(Individual par2) 
 { 
     // chromosome for offspring 
     string child_chromosome = ""; 
-  
+
     int len = chromosome.size(); 
     for(int i = 0;i<len;i++) 
     { 
         // random probability  
         float p = random_num(0, 100)/100; 
-  
+
         // if prob is less than 0.45, insert gene 
         // from parent 1  
         if(p < 0.45) 
             child_chromosome += chromosome[i]; 
-  
+
         // if prob is between 0.45 and 0.90, insert 
         // gene from parent 2 
         else if(p < 0.90) 
             child_chromosome += par2.chromosome[i]; 
-  
+
         // otherwise insert random gene(mutate),  
         // for maintaining diversity 
         else
             child_chromosome += mutated_genes(); 
     } 
-  
+
     // create new Individual(offspring) using  
     // generated chromosome for offspring 
     return Individual(child_chromosome); 
 }; 
-  
-  
+
+
 // Calculate fittness score, it is the number of 
 // characters in string which differ from target 
 // string. 
@@ -234,7 +235,7 @@ int Individual::cal_fitness()
     } 
     return fitness;     
 }; 
-  
+
 // Overloading < operator 
 bool operator<(const Individual &ind1, const Individual &ind2) 
 { 
@@ -256,13 +257,13 @@ int main (int argc, char **argv)
   //joy_sub   = nh.subscribe("/joy", 1, joy_callback);
 
    srand((unsigned)(time(0))); 
-  
+
     // current generation 
     int generation = 0; 
-  
+
     vector<Individual> population; 
     bool found = false; 
-  
+
     // create initial population 
     for(int i = 0;i<POPULATION_SIZE;i++) 
     { 
@@ -272,12 +273,12 @@ int main (int argc, char **argv)
 
   while(ros::ok())
   {
-  
+
     while(! found) 
     { 
         // sort the population in increasing order of fitness score 
         sort(population.begin(), population.end()); 
-  
+
         // if the individual having lowest fitness score ie.  
         // 0 then we know that we have reached to the target 
         // and break the loop 
@@ -286,16 +287,16 @@ int main (int argc, char **argv)
             found = true; 
             break; 
         } 
-  
+
         // Otherwise generate new offsprings for new generation 
         vector<Individual> new_generation; 
-  
+
         // Perform Elitism, that mean 10% of fittest population 
         // goes to the next generation 
         int s = (10*POPULATION_SIZE)/100; 
         for(int i = 0;i<s;i++) 
             new_generation.push_back(population[i]); 
-  
+
         // From 50% of fittest population, Individuals 
         // will mate to produce offspring 
         s = (90*POPULATION_SIZE)/100; 
@@ -313,7 +314,7 @@ int main (int argc, char **argv)
         cout<< "Generation: " << generation << "\t"; 
         cout<< "String: "<< population[0].chromosome <<"\t"; 
         cout<< "Fitness: "<< population[0].fitness << "\n"; 
-  
+
         generation++; 
      } 
      cout<< "Generation: " << generation << "\t"; 
