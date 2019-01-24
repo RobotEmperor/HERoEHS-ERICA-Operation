@@ -1,4 +1,3 @@
-
 /*
  * erica_decision_node.cpp
  *
@@ -38,20 +37,14 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   }
 
   // if person is close, the robot stops.
-  if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+ pow(fabs(desired_vector_msg.position.y),2)) <= 0.7)
+  if(fabs(desired_vector_msg.position.x) <= 0.7 || fabs(desired_vector_msg.position.y) <= 0.7)
   {
     desired_vector_msg.position.x = 0;
     desired_vector_msg.position.y = 0;
     return;
   }
 
-//  if(fabs(desired_vector_msg.position.x) <= 1 && fabs(desired_vector_msg.position.y) <= 1)
-//  {
-//    return;
-//  }
-//  else
-//  {
-    if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) > 1)
+    if(fabs(desired_vector_msg.position.x) > 1 || fabs(desired_vector_msg.position.y) > 1)
     {
       desired_vector_msg.position.x = 0;
       desired_vector_msg.position.y = 0;
@@ -62,7 +55,7 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
     temp_absolute_size = sqrt(pow(desired_vector_msg.position.x,2)+pow(desired_vector_msg.position.y,2));
     desired_vector_msg.position.x = desired_vector_msg.position.x/temp_absolute_size ;
     desired_vector_msg.position.y = desired_vector_msg.position.y/temp_absolute_size ;
-//  }
+  }
 }
 void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
 {
