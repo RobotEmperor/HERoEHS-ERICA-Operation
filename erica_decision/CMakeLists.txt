@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   erica_arm_module_msgs
   erica_perception_msgs
   robotis_math
+  heroehs_math
 )
 
 
@@ -20,7 +21,6 @@ catkin_package(
   INCLUDE_DIRS include
   CATKIN_DEPENDS roscpp std_msgs 
   #DEPENDS system_lib
-
 )
 find_package(Eigen REQUIRED)
 

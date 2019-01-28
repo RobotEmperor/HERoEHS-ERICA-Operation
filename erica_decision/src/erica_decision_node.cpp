@@ -11,9 +11,34 @@
 
 void initialize()
 {
+  simulation_robot_speed = 0.0;
+  robot_trj_time = 0.0 ;
+  simulation_check = false;
 
+  fifth_trj_x = new heroehs_math::FifthOrderTrajectory();
+  fifth_trj_y = new heroehs_math::FifthOrderTrajectory();
+
+  goal_desired_vector_x = 0.0;
+  goal_desired_vector_y = 0.0;
 }
+
 //callback
+void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
+{
+  if((ros::Time::now() - count).toSec() > 0.03)
+  {
+    if(pow(msg->axes[0],2)+pow(msg->axes[1],2) > 0.01)
+    {
+      desired_vector_msg.position.x = msg->axes[1];
+      desired_vector_msg.position.y = msg->axes[0];
+    }
+    else
+    {
+      desired_vector_msg.position.x = 0;
+      desired_vector_msg.position.y = 0;
+    }
+  }
+}
 void people_position_callback(const erica_perception_msgs::PeoplePositionArray::ConstPtr& msg)
 {
   if(msg->people_position.size() == 0)
@@ -36,7 +61,6 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
       }
     }
   }
-
   // if person is close, the robot stops.
   if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+ pow(fabs(desired_vector_msg.position.y),2)) <= 0.7)
   {
@@ -44,29 +68,31 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
     desired_vector_msg.position.y = 0;
     return;
   }
+  //  if(fabs(desired_vector_msg.position.x) <= 1 && fabs(desired_vector_msg.position.y) <= 1)
+  //  {
+  //    return;
+  //  }
+  //  else
+  //  {
+  if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) > 1)
+  {
+    desired_vector_msg.position.x = 0;
+    desired_vector_msg.position.y = 0;
+    return;
+  }
+  //unit vector
+/*  double temp_absolute_size = 0.0;
+  temp_absolute_size = sqrt(pow(desired_vector_msg.position.x,2)+pow(desired_vector_msg.position.y,2));
+  desired_vector_msg.position.x = desired_vector_msg.position.x/temp_absolute_size ;
+  desired_vector_msg.position.y = desired_vector_msg.position.y/temp_absolute_size ;*/
+  //  }
 
-//  if(fabs(desired_vector_msg.position.x) <= 1 && fabs(desired_vector_msg.position.y) <= 1)
-//  {
-//    return;
-//  }
-//  else
-//  {
-    if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) > 1)
-    {
-      desired_vector_msg.position.x = 0;
-      desired_vector_msg.position.y = 0;
-      return;
-    }
-    //unit vector
-    double temp_absolute_size = 0.0;
-    temp_absolute_size = sqrt(pow(desired_vector_msg.position.x,2)+pow(desired_vector_msg.position.y,2));
-    desired_vector_msg.position.x = desired_vector_msg.position.x/temp_absolute_size ;
-    desired_vector_msg.position.y = desired_vector_msg.position.y/temp_absolute_size ;
-//  }
+  goal_desired_vector_x = desired_vector_msg.position.x;
+  goal_desired_vector_y = desired_vector_msg.position.y;
 }
+//simulation
 void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
 {
-
   desired_vector_rviz_msg.header.frame_id = "map";
 
   desired_vector_rviz_msg.pose.orientation.z = atan2(desired_vector.position.y,desired_vector.position.x);
@@ -79,52 +105,113 @@ void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
   desired_vector_rviz_msg.pose.orientation.w = rqyToQ.w();
 }
 
+void simulation_gazebo(geometry_msgs::Pose desired_vector)
+{
+  double desired_theta_ = 0;
+  desired_theta_ = atan2(desired_vector.position.y, desired_vector.position.x);
 
+  if(desired_theta_ > M_PI/2 && desired_theta_ <= M_PI)
+    desired_theta_ =  desired_theta_ - M_PI;
+  if(desired_theta_ < -M_PI/2 && desired_theta_ >= -M_PI)
+    desired_theta_ =  desired_theta_ + M_PI;
+
+  left_wheel_front_steering_position_msg.data  = desired_theta_;
+  right_wheel_front_steering_position_msg.data = desired_theta_;
+  left_wheel_rear_steering_position_msg.data   = desired_theta_;
+  right_wheel_rear_steering_position_msg.data  = desired_theta_;
+
+  if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) != 0)
+  {
+    if(desired_vector_msg.position.x > 0)
+      cmd_vel_msg.linear.x = 0.2;
+    else
+      cmd_vel_msg.linear.x = -0.2;
+
+    if(desired_vector_msg.position.x == 0)
+    {
+      if(desired_vector_msg.position.y < 0)
+        cmd_vel_msg.linear.x = 0.2;
+      else
+        cmd_vel_msg.linear.x = -0.2;
+    }
+  }
+  else
+  {
+    cmd_vel_msg.linear.x = 0;
+  }
+
+  left_wheel_front_steering_position_pub.publish(left_wheel_front_steering_position_msg);
+  right_wheel_front_steering_position_pub.publish(right_wheel_front_steering_position_msg);
+  left_wheel_rear_steering_position_pub.publish(left_wheel_rear_steering_position_msg);
+  right_wheel_rear_steering_position_pub.publish(right_wheel_rear_steering_position_msg);
+
+  cmd_vel_pub.publish(cmd_vel_msg);
+}
+
+//algorithm function
+/*void desired_vector_trj(geometry_msgs::Pose *out_desired_vector_, double desired_value_x_ , double desired_value_y_)
+{
+ *out_desired_vector_= fifth_trj_x ->fifth_order_traj_gen(0,desired_value_x_,0,0,0,0,0,robot_trj_time);
+}*/
 
 
 int main (int argc, char **argv)
 {
   ros::init(argc, argv, "erica_decision_node");
   ros::NodeHandle nh;
+
   initialize();
 
+  //launch initialize
+  nh.param("simulation_check",  simulation_check, false);
+  nh.param("simulation_robot_speed", simulation_robot_speed, 0.2);
+  nh.param("robot_trj_time", robot_trj_time, 5.0);
 
   //pub
   desired_vector_pub = nh.advertise<geometry_msgs::Pose>("/erica/desired_vector",1);
   desired_vector_rviz_pub = nh.advertise<geometry_msgs::PoseStamped>("/erica/desired_vector_rviz",1);
 
+  left_wheel_front_steering_position_pub  = nh.advertise<std_msgs::Float64>("/erica_robot/left_wheel_front_steering_position/command",1);
+  right_wheel_front_steering_position_pub = nh.advertise<std_msgs::Float64>("/erica_robot/right_wheel_front_steering_position/command",1);
+  left_wheel_rear_steering_position_pub   = nh.advertise<std_msgs::Float64>("/erica_robot/left_wheel_rear_steering_position/command",1);
+  right_wheel_rear_steering_position_pub  = nh.advertise<std_msgs::Float64>("/erica_robot/right_wheel_rear_steering_position/command",1);
+
+  cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel",1);
+
 
   //sub
-  people_position_sub = nh.subscribe("/erica/people_position", 1, people_position_callback);
+  ros::Subscriber people_position_sub = nh.subscribe("/erica/people_position", 100, people_position_callback);
+  ros::Subscriber joy_sub   = nh.subscribe("/joy", 1, joy_callback);
 
-  ros::Rate r(100.0);
+
   while(ros::ok())
   {
-    simulation_rviz(desired_vector_msg);
-    /*printf("---------------------------------------\n");
-    printf("DIR Motor1 :: %d \n", motor_cmd_msg_1.motor_desired_direction);
-    printf("DIR Motor2 :: %d \n", motor_cmd_msg_2.motor_desired_direction);
-    printf("DIR Motor3 :: %d \n", motor_cmd_msg_3.motor_desired_direction);
-    printf("DIR Motor4 :: %d \n", motor_cmd_msg_4.motor_desired_direction);
-    printf("---------------------------------------\n");
-    printf("2    %f    ", motor_cmd_msg_2.motor_desired_speed);
-    printf("1    %f \n" , motor_cmd_msg_1.motor_desired_speed);
-    printf("4    %f    ", motor_cmd_msg_4.motor_desired_speed);
-    printf("3    %f \n" , motor_cmd_msg_3.motor_desired_speed);
+    if(simulation_check == true)
+    {
+      simulation_rviz(desired_vector_msg);
+      simulation_gazebo(desired_vector_msg);
+      desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
+    }
 
+    fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
+    //fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
+    desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
+    //desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
 
-     */
-    desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
+    //ROS_INFO("%f  \n", desired_vector_msg.position.x);
+
     desired_vector_pub.publish(desired_vector_msg);
+
+
     ros::spinOnce();
-    r.sleep();
+    usleep(8000);
   }
+  delete fifth_trj_x;
+  delete fifth_trj_y;
   return 0;
 }
 
 /*#define POPULATION_SIZE 100
-
-
 
 // C++ program to create target string, starting from 
 // random string using Genetic Algorithm 
