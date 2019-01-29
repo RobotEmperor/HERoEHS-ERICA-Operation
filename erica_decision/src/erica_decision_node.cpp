@@ -101,7 +101,7 @@ void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
 
 void simulation_gazebo(geometry_msgs::Pose desired_vector)
 {
-  double desired_theta_ = 0;
+  /*  double desired_theta_ = 0;
 
   if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) > 0.01)
   {
@@ -144,7 +144,22 @@ void simulation_gazebo(geometry_msgs::Pose desired_vector)
   left_wheel_rear_steering_position_pub.publish(left_wheel_rear_steering_position_msg);
   right_wheel_rear_steering_position_pub.publish(right_wheel_rear_steering_position_msg);
 
-  cmd_vel_pub.publish(cmd_vel_msg);
+  cmd_vel_pub.publish(cmd_vel_msg);*/
+
+  if(sqrt(pow(fabs(desired_vector.position.x),2)+pow(fabs(desired_vector.position.y),2)) > 0.01)
+  {
+    cmd_vel_x_msg.data = desired_vector.position.x;
+    cmd_vel_y_msg.data = desired_vector.position.y;
+
+  }
+  else
+  {
+    cmd_vel_x_msg.data = 0;
+    cmd_vel_y_msg.data = 0;
+  }
+
+  cmd_vel_x_pub.publish(cmd_vel_x_msg);
+  cmd_vel_y_pub.publish(cmd_vel_y_msg);
 }
 
 //algorithm function
@@ -174,6 +189,10 @@ int main (int argc, char **argv)
   right_wheel_front_steering_position_pub = nh.advertise<std_msgs::Float64>("/erica_robot/right_wheel_front_steering_position/command",1);
   left_wheel_rear_steering_position_pub   = nh.advertise<std_msgs::Float64>("/erica_robot/left_wheel_rear_steering_position/command",1);
   right_wheel_rear_steering_position_pub  = nh.advertise<std_msgs::Float64>("/erica_robot/right_wheel_rear_steering_position/command",1);
+
+
+  cmd_vel_x_pub = nh.advertise<std_msgs::Float64>("/erica_robot/fake_x_velocity/command",1);
+  cmd_vel_y_pub = nh.advertise<std_msgs::Float64>("/erica_robot/fake_y_velocity/command",1);
 
   cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel",1);
 

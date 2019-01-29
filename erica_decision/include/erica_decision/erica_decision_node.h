@@ -38,6 +38,11 @@ ros::Publisher right_wheel_front_steering_position_pub;
 ros::Publisher left_wheel_rear_steering_position_pub;
 ros::Publisher right_wheel_rear_steering_position_pub;
 
+ros::Publisher cmd_vel_x_pub;
+ros::Publisher cmd_vel_y_pub;
+
+ros::Publisher cmd_z_rotation_z_pub;
+
 ros::Publisher cmd_vel_pub;
 
 //ros msg
@@ -48,6 +53,9 @@ std_msgs::Float64 left_wheel_front_steering_position_msg;
 std_msgs::Float64 right_wheel_front_steering_position_msg;
 std_msgs::Float64 left_wheel_rear_steering_position_msg;
 std_msgs::Float64 right_wheel_rear_steering_position_msg;
+
+std_msgs::Float64 cmd_vel_x_msg;
+std_msgs::Float64 cmd_vel_y_msg;
 
 geometry_msgs::Twist cmd_vel_msg;
 
