@@ -77,8 +77,15 @@ public Q_SLOTS:
 	void on_yaw_plus_clicked();
 	void on_yaw_minus_clicked();
 
+
   void on_motion_num_send_button_clicked();
   void on_dummy_send_button_clicked();
+
+
+	void on_button_manual_send_clicked();
+ 	void on_button_manual_clicked();
+	void on_button_tracking_clicked();
+
 
     /******************************************
     ** Manual connections
