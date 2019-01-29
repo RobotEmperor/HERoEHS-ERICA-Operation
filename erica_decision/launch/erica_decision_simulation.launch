@@ -4,7 +4,7 @@
 
     <param name="simulation_check"             value="true"     type="bool"/>
     <param name="simulation_robot_speed" value="0.2"/>  <!-- m/s-->
-    <param name="robot_trj_time"         value="5.0"/>  <!-- s-->
+    <param name="robot_trj_time"         value="2.0"/>  <!-- s-->
  
      <!-- erica Manager -->
     <node name="erica_decision_node" pkg="erica_decision" type="erica_decision_node" output="screen"/>

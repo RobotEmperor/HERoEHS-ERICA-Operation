@@ -29,13 +29,13 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
   {
     if(pow(msg->axes[0],2)+pow(msg->axes[1],2) > 0.01)
     {
-      desired_vector_msg.position.x = msg->axes[1];
-      desired_vector_msg.position.y = msg->axes[0];
+      goal_desired_vector_x = msg->axes[1];
+      goal_desired_vector_y = msg->axes[0];
     }
     else
     {
-      desired_vector_msg.position.x = 0;
-      desired_vector_msg.position.y = 0;
+      goal_desired_vector_x = 0;
+      goal_desired_vector_y = 0;
     }
   }
 }
@@ -64,24 +64,18 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   // if person is close, the robot stops.
   if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+ pow(fabs(desired_vector_msg.position.y),2)) <= 0.7)
   {
-    desired_vector_msg.position.x = 0;
-    desired_vector_msg.position.y = 0;
+    goal_desired_vector_x = 0;
+    goal_desired_vector_y = 0;
     return;
   }
-  //  if(fabs(desired_vector_msg.position.x) <= 1 && fabs(desired_vector_msg.position.y) <= 1)
-  //  {
-  //    return;
-  //  }
-  //  else
-  //  {
   if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) > 1)
   {
-    desired_vector_msg.position.x = 0;
-    desired_vector_msg.position.y = 0;
+    goal_desired_vector_x = 0;
+    goal_desired_vector_y = 0;
     return;
   }
   //unit vector
-/*  double temp_absolute_size = 0.0;
+  /*  double temp_absolute_size = 0.0;
   temp_absolute_size = sqrt(pow(desired_vector_msg.position.x,2)+pow(desired_vector_msg.position.y,2));
   desired_vector_msg.position.x = desired_vector_msg.position.x/temp_absolute_size ;
   desired_vector_msg.position.y = desired_vector_msg.position.y/temp_absolute_size ;*/
@@ -108,19 +102,8 @@ void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
 void simulation_gazebo(geometry_msgs::Pose desired_vector)
 {
   double desired_theta_ = 0;
-  desired_theta_ = atan2(desired_vector.position.y, desired_vector.position.x);
 
-  if(desired_theta_ > M_PI/2 && desired_theta_ <= M_PI)
-    desired_theta_ =  desired_theta_ - M_PI;
-  if(desired_theta_ < -M_PI/2 && desired_theta_ >= -M_PI)
-    desired_theta_ =  desired_theta_ + M_PI;
-
-  left_wheel_front_steering_position_msg.data  = desired_theta_;
-  right_wheel_front_steering_position_msg.data = desired_theta_;
-  left_wheel_rear_steering_position_msg.data   = desired_theta_;
-  right_wheel_rear_steering_position_msg.data  = desired_theta_;
-
-  if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) != 0)
+  if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) > 0.01)
   {
     if(desired_vector_msg.position.x > 0)
       cmd_vel_msg.linear.x = 0.2;
@@ -134,10 +117,26 @@ void simulation_gazebo(geometry_msgs::Pose desired_vector)
       else
         cmd_vel_msg.linear.x = -0.2;
     }
+
+    desired_theta_ = atan2(desired_vector.position.y, desired_vector.position.x);
+
+    if(desired_theta_ > M_PI/2 && desired_theta_ <= M_PI)
+      desired_theta_ =  desired_theta_ - M_PI;
+    if(desired_theta_ < -M_PI/2 && desired_theta_ >= -M_PI)
+      desired_theta_ =  desired_theta_ + M_PI;
+
+    left_wheel_front_steering_position_msg.data  = desired_theta_;
+    right_wheel_front_steering_position_msg.data = desired_theta_;
+    left_wheel_rear_steering_position_msg.data   = desired_theta_;
+    right_wheel_rear_steering_position_msg.data  = desired_theta_;
   }
   else
   {
     cmd_vel_msg.linear.x = 0;
+    left_wheel_front_steering_position_msg.data  = 0;
+    right_wheel_front_steering_position_msg.data = 0;
+    left_wheel_rear_steering_position_msg.data   = 0;
+    right_wheel_rear_steering_position_msg.data  = 0;
   }
 
   left_wheel_front_steering_position_pub.publish(left_wheel_front_steering_position_msg);
@@ -186,6 +185,11 @@ int main (int argc, char **argv)
 
   while(ros::ok())
   {
+    fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
+    fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
+    desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
+    desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
+
     if(simulation_check == true)
     {
       simulation_rviz(desired_vector_msg);
@@ -193,15 +197,7 @@ int main (int argc, char **argv)
       desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
     }
 
-    fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
-    //fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
-    desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
-    //desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
-
-    //ROS_INFO("%f  \n", desired_vector_msg.position.x);
-
     desired_vector_pub.publish(desired_vector_msg);
-
 
     ros::spinOnce();
     usleep(8000);
