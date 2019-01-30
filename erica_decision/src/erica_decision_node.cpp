@@ -7,8 +7,7 @@
  */
 
 #include <erica_decision/erica_decision_node.h>
-
-
+#include <cmath>
 void initialize()
 {
   simulation_robot_speed = 0.0;
@@ -43,12 +42,14 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
 {
   if(msg->people_position.size() == 0)
   {
-    desired_vector_msg.position.x = 0;
-    desired_vector_msg.position.y = 0;
+    goal_desired_vector_x = 0;
+    goal_desired_vector_y = 0;
     return;
   }
   else
   {
+    if(std::isnan(msg->people_position[0].x) || std::isnan(msg->people_position[0].y))
+      return;
     desired_vector_msg.position.x = (double) msg->people_position[0].x;
     desired_vector_msg.position.y = (double) msg->people_position[0].y;
 
@@ -81,6 +82,7 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   desired_vector_msg.position.y = desired_vector_msg.position.y/temp_absolute_size ;*/
   //  }
 
+ 
   goal_desired_vector_x = desired_vector_msg.position.x;
   goal_desired_vector_y = desired_vector_msg.position.y;
 }
