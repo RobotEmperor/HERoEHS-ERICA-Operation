@@ -7,11 +7,16 @@
  */
 
 #include <erica_decision/erica_decision_node.h>
-#include <cmath>
 void initialize()
 {
   simulation_robot_speed = 0.0;
-  robot_trj_time = 0.0 ;
+  robot_trj_time  = 0.0;
+  detect_distance = 0.0;
+  people_detection_check = false;
+  lidar_detect_angle = 0.0;
+  lidar_detect_distance = 0.0;
+  sampling_count = 0;
+  lidar_sampling_count = 0;
   simulation_check = false;
 
   fifth_trj_x = new heroehs_math::FifthOrderTrajectory();
@@ -38,8 +43,32 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
     }
   }
 }
+void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
+{
+  for(int angle_number = 0; angle_number < lidar_detect_angle; angle_number++)
+  {
+    if((double) msg->ranges[angle_number] < lidar_detect_distance) // CW check
+    {
+      sampling_count ++;
+    }
+    if((double) msg->ranges[359-angle_number] < lidar_detect_distance) // CCW check
+    {
+      sampling_count ++;
+    }
+  }
+  if(sampling_count > lidar_sampling_count)
+  {
+    sampling_count = 0;
+    people_detection_check = true;
+    return;
+  }
+  sampling_count = 0;
+  people_detection_check = false;
+}
 void people_position_callback(const erica_perception_msgs::PeoplePositionArray::ConstPtr& msg)
 {
+  double temp_distance = 0.0;
+
   if(msg->people_position.size() == 0)
   {
     goal_desired_vector_x = 0;
@@ -48,43 +77,41 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   }
   else
   {
-    if(std::isnan(msg->people_position[0].x) || std::isnan(msg->people_position[0].y))
-      return;
-    desired_vector_msg.position.x = (double) msg->people_position[0].x;
-    desired_vector_msg.position.y = (double) msg->people_position[0].y;
+    goal_desired_vector_x = (double) msg->people_position[0].x;
+    goal_desired_vector_y = (double) msg->people_position[0].y;
 
-    for(int people_num = 1; people_num < msg->people_position.size(); people_num ++)
+    for(int people_num = 1; people_num < msg->people_position.size(); people_num ++) // Select closed people
     {
       if((pow((double) msg->people_position[people_num].x,2) +  pow((double) msg->people_position[people_num].y,2)) < (pow(desired_vector_msg.position.x,2)+pow(desired_vector_msg.position.y,2)))
       {
-        desired_vector_msg.position.x = (double) msg->people_position[people_num].x;
-        desired_vector_msg.position.y = (double) msg->people_position[people_num].y;
+        goal_desired_vector_x = (double) msg->people_position[people_num].x;
+        goal_desired_vector_y = (double) msg->people_position[people_num].y;
       }
     }
   }
-  // if person is close, the robot stops.
-  if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+ pow(fabs(desired_vector_msg.position.y),2)) <= 0.7)
-  {
-    goal_desired_vector_x = 0;
-    goal_desired_vector_y = 0;
-    return;
-  }
-  if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) > 1)
-  {
-    goal_desired_vector_x = 0;
-    goal_desired_vector_y = 0;
-    return;
-  }
-  //unit vector
-  /*  double temp_absolute_size = 0.0;
-  temp_absolute_size = sqrt(pow(desired_vector_msg.position.x,2)+pow(desired_vector_msg.position.y,2));
-  desired_vector_msg.position.x = desired_vector_msg.position.x/temp_absolute_size ;
-  desired_vector_msg.position.y = desired_vector_msg.position.y/temp_absolute_size ;*/
-  //  }
 
- 
-  goal_desired_vector_x = desired_vector_msg.position.x;
-  goal_desired_vector_y = desired_vector_msg.position.y;
+  temp_distance = sqrt(pow(fabs(goal_desired_vector_x),2)+ pow(fabs(goal_desired_vector_y),2));
+  if(std::isnan(temp_distance))
+  {
+    return;
+  }
+  // if person is close, the robot keeps going or stops.
+  if(temp_distance <= 1.0 && temp_distance > 0.7)
+  {
+    return;
+  }
+  if(temp_distance <= detect_distance && temp_distance >=1.0)// detect_distance initial value 1.0
+  {
+    //unit vector
+    goal_desired_vector_x = goal_desired_vector_x/temp_distance;
+    goal_desired_vector_y = goal_desired_vector_y/temp_distance;
+    //
+  }
+  else
+  {
+    goal_desired_vector_x = 0;
+    goal_desired_vector_y = 0;
+  }
 }
 //simulation
 void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
@@ -164,13 +191,6 @@ void simulation_gazebo(geometry_msgs::Pose desired_vector)
   cmd_vel_y_pub.publish(cmd_vel_y_msg);
 }
 
-//algorithm function
-/*void desired_vector_trj(geometry_msgs::Pose *out_desired_vector_, double desired_value_x_ , double desired_value_y_)
-{
- *out_desired_vector_= fifth_trj_x ->fifth_order_traj_gen(0,desired_value_x_,0,0,0,0,0,robot_trj_time);
-}*/
-
-
 int main (int argc, char **argv)
 {
   ros::init(argc, argv, "erica_decision_node");
@@ -181,7 +201,12 @@ int main (int argc, char **argv)
   //launch initialize
   nh.param("simulation_check",  simulation_check, false);
   nh.param("simulation_robot_speed", simulation_robot_speed, 0.2);
-  nh.param("robot_trj_time", robot_trj_time, 5.0);
+  nh.param("robot_trj_time", robot_trj_time, 2.0);
+  nh.param("detect_distance", detect_distance, 2.0);
+  nh.param("lidar_detect_angle", lidar_detect_angle, 15.0);
+  nh.param("lidar_detect_distance", lidar_detect_distance, 0.3);
+  nh.param("lidar_sampling_count", lidar_sampling_count, 15);
+
 
   //pub
   desired_vector_pub = nh.advertise<geometry_msgs::Pose>("/erica/desired_vector",1);
@@ -201,6 +226,7 @@ int main (int argc, char **argv)
 
   //sub
   ros::Subscriber people_position_sub = nh.subscribe("/erica/people_position", 100, people_position_callback);
+  ros::Subscriber scan_sub = nh.subscribe("/scan", 1, scan_callback);
   ros::Subscriber joy_sub   = nh.subscribe("/joy", 1, joy_callback);
 
 
@@ -211,18 +237,26 @@ int main (int argc, char **argv)
     desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
     desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
 
+    if(people_detection_check)
+    {
+      desired_vector_msg.position.x = 0;
+      desired_vector_msg.position.y = 0;
+      goal_desired_vector_x = 0;
+      goal_desired_vector_y = 0;
+    }
+
     if(simulation_check == true)
     {
       simulation_rviz(desired_vector_msg);
       simulation_gazebo(desired_vector_msg);
       desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
     }
-
     desired_vector_pub.publish(desired_vector_msg);
 
     ros::spinOnce();
     usleep(8000);
   }
+
   delete fifth_trj_x;
   delete fifth_trj_y;
   return 0;

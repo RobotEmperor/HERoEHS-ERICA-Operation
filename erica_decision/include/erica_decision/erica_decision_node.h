@@ -11,6 +11,7 @@
 #include <ros/ros.h>
 #include <stdio.h>
 #include <math.h>
+#include <cmath>
 
 //ros_communication_message type
 #include <std_msgs/Float64.h>
@@ -18,6 +19,7 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Joy.h>
+#include <sensor_msgs/LaserScan.h>
 
 //custom header
 #include <robotis_math/robotis_math.h>
@@ -65,8 +67,20 @@ ros::Time count;
 
 bool   simulation_check;
 double simulation_robot_speed;
-
 double robot_trj_time;
+
+//decision
+//ZED camera
+double detect_distance;
+
+//Lidar
+bool   people_detection_check;
+int    sampling_count;
+double lidar_detect_angle;
+double lidar_detect_distance; // To match sensor_msgs/ ranges variables type
+int    lidar_sampling_count;
+
+//results
 double goal_desired_vector_x;
 double goal_desired_vector_y;
 
@@ -83,6 +97,7 @@ void simulation_gazebo(geometry_msgs::Pose desired_vector);
 //void desired_vector_trj(geometry_msgs::Pose *out_desired_vector_, double desired_value_x_ , double desired_value_y_);
 
 //callback
+void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
 void people_position_callback(const erica_perception_msgs::PeoplePositionArray::ConstPtr& msg);
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg);
 
