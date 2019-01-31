@@ -35,31 +35,10 @@ ros::Publisher desired_vector_pub;
 ros::Publisher desired_vector_rviz_pub;
 
 //gazebo
-ros::Publisher left_wheel_front_steering_position_pub;
-ros::Publisher right_wheel_front_steering_position_pub;
-ros::Publisher left_wheel_rear_steering_position_pub;
-ros::Publisher right_wheel_rear_steering_position_pub;
-
-ros::Publisher cmd_vel_x_pub;
-ros::Publisher cmd_vel_y_pub;
-
-ros::Publisher cmd_z_rotation_z_pub;
-
-ros::Publisher cmd_vel_pub;
 
 //ros msg
 geometry_msgs::Pose desired_vector_msg;
 geometry_msgs::PoseStamped desired_vector_rviz_msg;
-
-std_msgs::Float64 left_wheel_front_steering_position_msg;
-std_msgs::Float64 right_wheel_front_steering_position_msg;
-std_msgs::Float64 left_wheel_rear_steering_position_msg;
-std_msgs::Float64 right_wheel_rear_steering_position_msg;
-
-std_msgs::Float64 cmd_vel_x_msg;
-std_msgs::Float64 cmd_vel_y_msg;
-
-geometry_msgs::Twist cmd_vel_msg;
 
 //variables
 Eigen::Quaterniond rqyToQ;
@@ -91,7 +70,7 @@ heroehs_math::FifthOrderTrajectory * fifth_trj_y;
 //function
 void initialize();
 void simulation_rviz(geometry_msgs::Pose desired_vector);
-void simulation_gazebo(geometry_msgs::Pose desired_vector);
+
 
 //function algorithm
 //void desired_vector_trj(geometry_msgs::Pose *out_desired_vector_, double desired_value_x_ , double desired_value_y_);

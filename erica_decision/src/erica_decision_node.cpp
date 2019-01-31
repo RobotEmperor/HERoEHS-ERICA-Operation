@@ -128,68 +128,7 @@ void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
   desired_vector_rviz_msg.pose.orientation.w = rqyToQ.w();
 }
 
-void simulation_gazebo(geometry_msgs::Pose desired_vector)
-{
-  /*  double desired_theta_ = 0;
 
-  if(sqrt(pow(fabs(desired_vector_msg.position.x),2)+pow(fabs(desired_vector_msg.position.y),2)) > 0.01)
-  {
-    if(desired_vector_msg.position.x > 0)
-      cmd_vel_msg.linear.x = 0.2;
-    else
-      cmd_vel_msg.linear.x = -0.2;
-
-    if(desired_vector_msg.position.x == 0)
-    {
-      if(desired_vector_msg.position.y < 0)
-        cmd_vel_msg.linear.x = 0.2;
-      else
-        cmd_vel_msg.linear.x = -0.2;
-    }
-
-    desired_theta_ = atan2(desired_vector.position.y, desired_vector.position.x);
-
-    if(desired_theta_ > M_PI/2 && desired_theta_ <= M_PI)
-      desired_theta_ =  desired_theta_ - M_PI;
-    if(desired_theta_ < -M_PI/2 && desired_theta_ >= -M_PI)
-      desired_theta_ =  desired_theta_ + M_PI;
-
-    left_wheel_front_steering_position_msg.data  = desired_theta_;
-    right_wheel_front_steering_position_msg.data = desired_theta_;
-    left_wheel_rear_steering_position_msg.data   = desired_theta_;
-    right_wheel_rear_steering_position_msg.data  = desired_theta_;
-  }
-  else
-  {
-    cmd_vel_msg.linear.x = 0;
-    left_wheel_front_steering_position_msg.data  = 0;
-    right_wheel_front_steering_position_msg.data = 0;
-    left_wheel_rear_steering_position_msg.data   = 0;
-    right_wheel_rear_steering_position_msg.data  = 0;
-  }
-
-  left_wheel_front_steering_position_pub.publish(left_wheel_front_steering_position_msg);
-  right_wheel_front_steering_position_pub.publish(right_wheel_front_steering_position_msg);
-  left_wheel_rear_steering_position_pub.publish(left_wheel_rear_steering_position_msg);
-  right_wheel_rear_steering_position_pub.publish(right_wheel_rear_steering_position_msg);
-
-  cmd_vel_pub.publish(cmd_vel_msg);*/
-
-  if(sqrt(pow(fabs(desired_vector.position.x),2)+pow(fabs(desired_vector.position.y),2)) > 0.01)
-  {
-    cmd_vel_x_msg.data = desired_vector.position.x;
-    cmd_vel_y_msg.data = desired_vector.position.y;
-
-  }
-  else
-  {
-    cmd_vel_x_msg.data = 0;
-    cmd_vel_y_msg.data = 0;
-  }
-
-  cmd_vel_x_pub.publish(cmd_vel_x_msg);
-  cmd_vel_y_pub.publish(cmd_vel_y_msg);
-}
 
 int main (int argc, char **argv)
 {
@@ -212,16 +151,6 @@ int main (int argc, char **argv)
   desired_vector_pub = nh.advertise<geometry_msgs::Pose>("/erica/desired_vector",1);
   desired_vector_rviz_pub = nh.advertise<geometry_msgs::PoseStamped>("/erica/desired_vector_rviz",1);
 
-  left_wheel_front_steering_position_pub  = nh.advertise<std_msgs::Float64>("/erica_robot/left_wheel_front_steering_position/command",1);
-  right_wheel_front_steering_position_pub = nh.advertise<std_msgs::Float64>("/erica_robot/right_wheel_front_steering_position/command",1);
-  left_wheel_rear_steering_position_pub   = nh.advertise<std_msgs::Float64>("/erica_robot/left_wheel_rear_steering_position/command",1);
-  right_wheel_rear_steering_position_pub  = nh.advertise<std_msgs::Float64>("/erica_robot/right_wheel_rear_steering_position/command",1);
-
-
-  cmd_vel_x_pub = nh.advertise<std_msgs::Float64>("/erica_robot/fake_x_velocity/command",1);
-  cmd_vel_y_pub = nh.advertise<std_msgs::Float64>("/erica_robot/fake_y_velocity/command",1);
-
-  cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel",1);
 
 
   //sub
@@ -237,7 +166,7 @@ int main (int argc, char **argv)
     desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
     desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
 
-    if(people_detection_check)
+    if(people_detection_check && simulation_check == false)
     {
       desired_vector_msg.position.x = 0;
       desired_vector_msg.position.y = 0;
@@ -248,7 +177,6 @@ int main (int argc, char **argv)
     if(simulation_check == true)
     {
       simulation_rviz(desired_vector_msg);
-      simulation_gazebo(desired_vector_msg);
       desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
     }
     desired_vector_pub.publish(desired_vector_msg);
