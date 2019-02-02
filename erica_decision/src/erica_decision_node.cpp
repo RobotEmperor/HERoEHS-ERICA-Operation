@@ -179,7 +179,7 @@ int main (int argc, char **argv)
         goal_desired_vector_x = 0;
         goal_desired_vector_y = 0;
 
-        rotation_check = true;
+        //rotation_check = true;
       }
       if(simulation_check == true)
       {
