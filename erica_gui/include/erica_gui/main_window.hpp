@@ -42,6 +42,7 @@ public:
 
 	void closeEvent(QCloseEvent *event); // Overloaded function
 	void savePeoplePosition(QString x, QString y, QString z);
+	void savePixelPosition(QString p_x, QString p_y, QString b_s);
 
 public Q_SLOTS:
 	/******************************************

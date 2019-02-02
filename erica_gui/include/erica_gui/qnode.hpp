@@ -94,6 +94,9 @@ public:
 
 	erica_perception_msgs::PeoplePositionArray people_position_msg;
 	geometry_msgs::Point32 temp_people_position;
+	std_msgs::Int32 temp_pixel_x;
+	std_msgs::Int32 temp_pixel_y;
+	std_msgs::Int32 temp_box_size;
 
 	std_msgs::Float64MultiArray motor_rad_value;
 	std_msgs::Bool enable_manual;

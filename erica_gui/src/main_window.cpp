@@ -368,9 +368,15 @@ void MainWindow::on_dummy_send_button_clicked()
 	savePeoplePosition(ui.people_x3_line_edit->text(), ui.people_y3_line_edit->text(), ui.people_z3_line_edit->text());
 	savePeoplePosition(ui.people_x4_line_edit->text(), ui.people_y4_line_edit->text(), ui.people_z4_line_edit->text());
 
+	savePixelPosition(ui.pixel_x_line_edit->text(), ui.pixel_y_line_edit->text(), ui.box_size_line_edit->text());
+
 	qnode.g_people_position_pub.publish(qnode.people_position_msg);
 	qnode.people_position_msg.people_position.clear();
+	qnode.people_position_msg.pixel_x.clear();
+	qnode.people_position_msg.pixel_y.clear();
+	qnode.people_position_msg.box_size.clear();
 }
+
 
 
 /*****************************************************************************
@@ -419,6 +425,44 @@ void MainWindow::savePeoplePosition(QString x, QString y, QString z)
 		return;
 
 }
+
+void MainWindow::savePixelPosition(QString p_x, QString p_y, QString b_s)
+{
+	QString pixel_x_str;
+	int  pixel_x_double = 0;
+
+	QString pixel_y_str;
+	int  pixel_y_double = 0;
+
+	QString box_size_str;
+	int  box_size_double = 0;
+
+	pixel_x_str = p_x;
+	pixel_x_double = pixel_x_str.toInt();
+
+	pixel_y_str = p_y;
+	pixel_y_double = pixel_y_str.toInt();
+
+	box_size_str = b_s;
+	box_size_double = box_size_str.toInt();
+
+	qnode.temp_pixel_x.data = (int) pixel_x_double;
+	qnode.temp_pixel_y.data = (int) pixel_y_double;
+	qnode.temp_box_size.data = (int) box_size_double;
+
+	if( pixel_x_double!=0 || pixel_y_double!=0 || box_size_double!=0 )
+	{
+
+		qnode.people_position_msg.pixel_x.push_back(qnode.temp_pixel_x);
+		qnode.people_position_msg.pixel_y.push_back(qnode.temp_pixel_y);
+		qnode.people_position_msg.box_size.push_back(qnode.temp_box_size);
+
+	}
+	else
+		return;
+
+}
+
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
