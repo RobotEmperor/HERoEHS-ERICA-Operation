@@ -13,6 +13,7 @@ void initialize()
   robot_trj_time  = 0.0;
   detect_distance = 0.0;
   people_detection_check = false;
+  rotation_check = false;
   lidar_detect_angle = 0.0;
   lidar_detect_distance = 0.0;
   sampling_count = 0;
@@ -91,6 +92,9 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   }
 
   temp_distance = sqrt(pow(fabs(goal_desired_vector_x),2)+ pow(fabs(goal_desired_vector_y),2));
+
+  printf("%f :: ", temp_distance);
+
   if(std::isnan(temp_distance))
   {
     return;
@@ -161,25 +165,40 @@ int main (int argc, char **argv)
 
   while(ros::ok())
   {
-    fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
-    fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
-    desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
-    desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
 
-    if(people_detection_check && simulation_check == false)
+    if(rotation_check == false)
     {
-      desired_vector_msg.position.x = 0;
-      desired_vector_msg.position.y = 0;
-      goal_desired_vector_x = 0;
-      goal_desired_vector_y = 0;
-    }
+      fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
+      fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
+      desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
+      desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
 
-    if(simulation_check == true)
-    {
-      simulation_rviz(desired_vector_msg);
-      desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
+      if(people_detection_check && simulation_check == false)
+      {
+        desired_vector_msg.position.x = 0;
+        desired_vector_msg.position.y = 0;
+        goal_desired_vector_x = 0;
+        goal_desired_vector_y = 0;
+
+        rotation_check = true;
+      }
+      if(simulation_check == true)
+      {
+        simulation_rviz(desired_vector_msg);
+        desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
+      }
+      desired_vector_pub.publish(desired_vector_msg);
     }
-    desired_vector_pub.publish(desired_vector_msg);
+    else // rotation start!
+    {
+      /*
+      if()// if the yaw angle is closed in 0, stop
+      {
+
+      }
+      */
+
+    }
 
     ros::spinOnce();
     usleep(8000);

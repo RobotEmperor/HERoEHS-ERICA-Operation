@@ -15,6 +15,7 @@
 
 //ros_communication_message type
 #include <std_msgs/Float64.h>
+#include <std_msgs/Int8.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Twist.h>
@@ -33,6 +34,8 @@ ros::Publisher desired_vector_pub;
 
 // simulation
 ros::Publisher desired_vector_rviz_pub;
+
+ros::Publisher arrivals_action_command_pub;
 
 //gazebo
 
@@ -58,6 +61,9 @@ int    sampling_count;
 double lidar_detect_angle;
 double lidar_detect_distance; // To match sensor_msgs/ ranges variables type
 int    lidar_sampling_count;
+
+//arrivals and rotation
+bool rotation_check;
 
 //results
 double goal_desired_vector_x;
