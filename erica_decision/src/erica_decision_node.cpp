@@ -78,6 +78,14 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   }
   else
   {
+
+    temp_distance = sqrt(pow(fabs(msg->people_position[0].x),2)+ pow(fabs(msg->people_position[0].y),2));
+
+    if(std::isnan(temp_distance))
+    {
+      return;
+    }
+
     goal_desired_vector_x = (double) msg->people_position[0].x;
     goal_desired_vector_y = (double) msg->people_position[0].y;
 
@@ -89,15 +97,6 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
         goal_desired_vector_y = (double) msg->people_position[people_num].y;
       }
     }
-  }
-
-  temp_distance = sqrt(pow(fabs(goal_desired_vector_x),2)+ pow(fabs(goal_desired_vector_y),2));
-
-  printf("%f :: ", temp_distance);
-
-  if(std::isnan(temp_distance))
-  {
-    return;
   }
   // if person is close, the robot keeps going or stops.
   if(temp_distance <= 1.0 && temp_distance > 0.7)
