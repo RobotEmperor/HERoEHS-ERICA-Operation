@@ -60,9 +60,9 @@ bool QNode::init() {
 	g_people_position_pub =  n.advertise<erica_perception_msgs::PeoplePositionArray>("/erica/people_position", 1);
 
 	//haed module
-	head_gui_motor_publisher = n.advertise<std_msgs::Float64MultiArray>("/ij/head_ctrl", 1);
-	head_gui_manual_publisher = n.advertise<std_msgs::Bool>("/ij/head_manual", 1);
-	head_gui_tracking_publisher= n.advertise<std_msgs::Bool>("/ij/head_tracking", 1);
+	head_gui_motor_publisher = n.advertise<std_msgs::Float64MultiArray>("/erica/head_ctrl", 1);
+	head_gui_manual_publisher = n.advertise<std_msgs::Bool>("/erica/head_manual", 1);
+	head_gui_tracking_publisher= n.advertise<std_msgs::Bool>("/erica/head_tracking", 1);
 
 
 	start();
