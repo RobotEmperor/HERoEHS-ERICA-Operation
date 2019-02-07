@@ -98,6 +98,11 @@ public:
 	std_msgs::Int32 temp_pixel_y;
 	std_msgs::Int32 temp_box_size;
 
+	std_msgs::Int32 temp_box_width;
+	std_msgs::Int32 temp_box_height;
+	std_msgs::Int32 temp_img_width;
+	std_msgs::Int32 temp_img_height;
+
 	std_msgs::Float64MultiArray motor_rad_value;
 	std_msgs::Bool enable_manual;
 	std_msgs::Bool enable_tracking;

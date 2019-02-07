@@ -370,11 +370,16 @@ void MainWindow::on_dummy_send_button_clicked()
 
 	savePixelPosition(ui.pixel_x_line_edit->text(), ui.pixel_y_line_edit->text(), ui.box_size_line_edit->text());
 
+	saveBoxPosition(ui.box_height_line_edit->text(), ui.box_width_line_edit->text(), ui.img_height_line_edit->text(), ui.img_width_line_edit->text());
+
+
 	qnode.g_people_position_pub.publish(qnode.people_position_msg);
 	qnode.people_position_msg.people_position.clear();
 	qnode.people_position_msg.pixel_x.clear();
 	qnode.people_position_msg.pixel_y.clear();
 	qnode.people_position_msg.box_size.clear();
+	qnode.people_position_msg.box_height.clear();
+	qnode.people_position_msg.box_width.clear();
 }
 
 
@@ -430,12 +435,13 @@ void MainWindow::savePixelPosition(QString p_x, QString p_y, QString b_s)
 {
 	QString pixel_x_str;
 	int  pixel_x_double = 0;
-
 	QString pixel_y_str;
 	int  pixel_y_double = 0;
 
 	QString box_size_str;
 	int  box_size_double = 0;
+
+
 
 	pixel_x_str = p_x;
 	pixel_x_double = pixel_x_str.toInt();
@@ -445,6 +451,8 @@ void MainWindow::savePixelPosition(QString p_x, QString p_y, QString b_s)
 
 	box_size_str = b_s;
 	box_size_double = box_size_str.toInt();
+
+
 
 	qnode.temp_pixel_x.data = (int) pixel_x_double;
 	qnode.temp_pixel_y.data = (int) pixel_y_double;
@@ -462,6 +470,50 @@ void MainWindow::savePixelPosition(QString p_x, QString p_y, QString b_s)
 		return;
 
 }
+
+void MainWindow::saveBoxPosition(QString b_h, QString b_w, QString i_h, QString i_w)
+{
+
+	QString box_height_str;
+	int  box_height_double = 0;
+	QString box_width_str;
+	int  box_width_double = 0;
+
+	QString img_height_str;
+	int  img_height_double = 0;
+	QString img_width_str;
+	int  img_width_double = 0;
+
+	box_width_str = b_w;
+	box_width_double = box_width_str.toInt();
+	box_height_str = b_h;
+	box_height_double = box_height_str.toInt();
+
+	img_width_str = i_w;
+	img_width_double = img_width_str.toInt();
+	img_height_str = i_h;
+	img_height_double = img_height_str.toInt();
+
+
+	qnode.temp_box_width.data = (int) box_width_double;
+	qnode.temp_box_height.data = (int) box_height_double;
+	qnode.temp_img_width.data = (int) img_width_double;
+	qnode.temp_img_height.data = (int) img_height_double;
+
+	if( box_width_double!=0 || box_height_double!=0 || img_width_double!=0 || img_height_double!=0 )
+	{
+		qnode.people_position_msg.box_height.push_back(qnode.temp_box_height);
+		qnode.people_position_msg.box_width.push_back(qnode.temp_box_width);
+		qnode.people_position_msg.img_height=qnode.temp_img_height;
+		qnode.people_position_msg.img_width=qnode.temp_img_width;
+
+	}
+	else
+		return;
+
+}
+
+
 
 
 void MainWindow::closeEvent(QCloseEvent *event)
