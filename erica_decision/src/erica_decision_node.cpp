@@ -7,6 +7,7 @@
  */
 
 #include <erica_decision/erica_decision_node.h>
+
 void initialize()
 {
   simulation_robot_speed = 0.0;
@@ -14,6 +15,7 @@ void initialize()
   detect_distance = 0.0;
   people_detection_check = false;
   rotation_check = false;
+  head_yaw_position = 0.0;
   lidar_detect_angle = 0.0;
   lidar_detect_distance = 0.0;
   sampling_count = 0;
@@ -64,6 +66,7 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
     return;
   }
   sampling_count = 0;
+  rotation_check = false;
   people_detection_check = false;
 }
 void people_position_callback(const erica_perception_msgs::PeoplePositionArray::ConstPtr& msg)
@@ -116,6 +119,18 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
     goal_desired_vector_y = 0;
   }
 }
+void present_joint_states_callback(const sensor_msgs::JointState::ConstPtr& msg)
+{
+  for(int joint_num=0; joint_num < msg->name.size(); joint_num ++)
+  {
+    if(!msg->name[joint_num].compare("head_yaw")) // if it matches head_yaw, return 0, so added !
+    {
+      head_yaw_position = msg->position[joint_num];
+      printf("head yaw :: %f \n", head_yaw_position);
+      return;
+    }
+  }
+}
 //simulation
 void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
 {
@@ -153,6 +168,7 @@ int main (int argc, char **argv)
   //pub
   desired_vector_pub = nh.advertise<geometry_msgs::Pose>("/erica/desired_vector",1);
   desired_vector_rviz_pub = nh.advertise<geometry_msgs::PoseStamped>("/erica/desired_vector_rviz",1);
+  arrivals_action_command_pub = nh.advertise<std_msgs::Int8>("/erica/arrivals_action_command",1);
 
 
 
@@ -160,6 +176,7 @@ int main (int argc, char **argv)
   ros::Subscriber people_position_sub = nh.subscribe("/erica/people_position", 100, people_position_callback);
   ros::Subscriber scan_sub = nh.subscribe("/scan", 1, scan_callback);
   ros::Subscriber joy_sub   = nh.subscribe("/joy", 1, joy_callback);
+  ros::Subscriber present_joint_states_sub   = nh.subscribe("/robotis/present_joint_states", 1, present_joint_states_callback);
 
 
   while(ros::ok())
@@ -179,24 +196,32 @@ int main (int argc, char **argv)
         goal_desired_vector_x = 0;
         goal_desired_vector_y = 0;
 
-        //rotation_check = true;
+        rotation_check = true;
       }
       if(simulation_check == true)
       {
         simulation_rviz(desired_vector_msg);
         desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
       }
+      arrivals_action_command_msg.data = 0;
+      arrivals_action_command_pub.publish(arrivals_action_command_msg);
       desired_vector_pub.publish(desired_vector_msg);
     }
-    else // rotation start!
+    else // rotation starts!
     {
-      /*
-      if()// if the yaw angle is closed in 0, stop
+      if(-5*DEGREE2RADIAN <= head_yaw_position <= 5*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
       {
-
+        arrivals_action_command_msg.data = 0;
+        //rotation stops and action starts!
       }
-      */
-
+      else
+      {
+        if(head_yaw_position > 0)
+          arrivals_action_command_msg.data = 1;
+        if(head_yaw_position < 0)
+          arrivals_action_command_msg.data = 2;
+      }
+      arrivals_action_command_pub.publish(arrivals_action_command_msg);
     }
 
     ros::spinOnce();

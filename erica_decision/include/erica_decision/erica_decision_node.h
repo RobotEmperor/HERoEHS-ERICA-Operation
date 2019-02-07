@@ -21,6 +21,7 @@
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Joy.h>
 #include <sensor_msgs/LaserScan.h>
+#include <sensor_msgs/JointState.h>
 
 //custom header
 #include <robotis_math/robotis_math.h>
@@ -42,6 +43,7 @@ ros::Publisher arrivals_action_command_pub;
 //ros msg
 geometry_msgs::Pose desired_vector_msg;
 geometry_msgs::PoseStamped desired_vector_rviz_msg;
+std_msgs::Int8 arrivals_action_command_msg;
 
 //variables
 Eigen::Quaterniond rqyToQ;
@@ -64,6 +66,7 @@ int    lidar_sampling_count;
 
 //arrivals and rotation
 bool rotation_check;
+double head_yaw_position;
 
 //results
 double goal_desired_vector_x;
@@ -85,6 +88,7 @@ void simulation_rviz(geometry_msgs::Pose desired_vector);
 void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
 void people_position_callback(const erica_perception_msgs::PeoplePositionArray::ConstPtr& msg);
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg);
+void present_joint_states_callback(const sensor_msgs::JointState::ConstPtr& msg);
 
 
 #endif /* ERICA_HEROEHS_ERICA_OPERATION_ERICA_DECISION_INCLUDE_ERICA_DECISION_ERICA_DECISION_NODE_H_ */
