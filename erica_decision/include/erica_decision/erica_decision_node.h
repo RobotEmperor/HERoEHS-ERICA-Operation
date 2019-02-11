@@ -16,6 +16,7 @@
 //ros_communication_message type
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int8.h>
+#include <std_msgs/String.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Twist.h>
@@ -50,6 +51,8 @@ Eigen::Quaterniond rqyToQ;
 ros::Time count;
 
 bool   simulation_check;
+bool   action_movement_done_check;
+int    action_count;
 double simulation_robot_speed;
 double robot_trj_time;
 

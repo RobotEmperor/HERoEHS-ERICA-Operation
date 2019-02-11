@@ -21,6 +21,8 @@ void initialize()
   sampling_count = 0;
   lidar_sampling_count = 0;
   simulation_check = false;
+  action_movement_done_check = true;
+  action_count = 1;
 
   fifth_trj_x = new heroehs_math::FifthOrderTrajectory();
   fifth_trj_y = new heroehs_math::FifthOrderTrajectory();
@@ -81,7 +83,6 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   }
   else
   {
-
     temp_distance = sqrt(pow(fabs(msg->people_position[0].x),2)+ pow(fabs(msg->people_position[0].y),2));
 
     if(std::isnan(temp_distance))
@@ -126,17 +127,22 @@ void present_joint_states_callback(const sensor_msgs::JointState::ConstPtr& msg)
     if(!msg->name[joint_num].compare("head_yaw")) // if it matches head_yaw, return 0, so added !
     {
       head_yaw_position = msg->position[joint_num];
-      printf("head yaw :: %f \n", head_yaw_position);
       return;
     }
   }
+}
+
+void movement_done_callback(const std_msgs::String::ConstPtr& msg)
+{
+  action_movement_done_check = true;
+  action_count ++;
 }
 //simulation
 void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
 {
   desired_vector_rviz_msg.header.frame_id = "map";
 
-  desired_vector_rviz_msg.pose.orientation.z = atan2(desired_vector.position.y,desired_vector.position.x);
+  desired_vector_rviz_msg.pose.orientation.z = atan2(desired_vector.position.y, desired_vector.position.x);
 
   rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,desired_vector_rviz_msg.pose.orientation.z);
 
@@ -164,13 +170,10 @@ int main (int argc, char **argv)
   nh.param("lidar_detect_distance", lidar_detect_distance, 0.3);
   nh.param("lidar_sampling_count", lidar_sampling_count, 15);
 
-
   //pub
   desired_vector_pub = nh.advertise<geometry_msgs::Pose>("/erica/desired_vector",1);
   desired_vector_rviz_pub = nh.advertise<geometry_msgs::PoseStamped>("/erica/desired_vector_rviz",1);
   arrivals_action_command_pub = nh.advertise<std_msgs::Int8>("/erica/arrivals_action_command",1);
-
-
 
   //sub
   ros::Subscriber people_position_sub = nh.subscribe("/erica/people_position", 100, people_position_callback);
@@ -178,10 +181,12 @@ int main (int argc, char **argv)
   ros::Subscriber joy_sub   = nh.subscribe("/joy", 1, joy_callback);
   ros::Subscriber present_joint_states_sub   = nh.subscribe("/robotis/present_joint_states", 1, present_joint_states_callback);
 
+  //sub motion done
+  ros::Subscriber movement_done_sub   = nh.subscribe("/robotis/movement_done", 1, movement_done_callback);
+
 
   while(ros::ok())
   {
-
     if(rotation_check == false)
     {
       fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
@@ -189,7 +194,7 @@ int main (int argc, char **argv)
       desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
       desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
 
-      if(people_detection_check && simulation_check == false)
+      if(people_detection_check)
       {
         desired_vector_msg.position.x = 0;
         desired_vector_msg.position.y = 0;
@@ -209,25 +214,29 @@ int main (int argc, char **argv)
     }
     else // rotation starts!
     {
-      if(-5*DEGREE2RADIAN <= head_yaw_position <= 5*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
+      if(head_yaw_position > -5*DEGREE2RADIAN && head_yaw_position < 5*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
       {
         arrivals_action_command_msg.data = 0;
+        if(action_movement_done_check && action_count == 1)
+        {
+          arrivals_action_command_msg.data = 1; // motion 1 starts!
+        }
+        action_movement_done_check = false;
         //rotation stops and action starts!
       }
       else
       {
-        if(head_yaw_position > 0)
-          arrivals_action_command_msg.data = 1;
-        if(head_yaw_position < 0)
-          arrivals_action_command_msg.data = 2;
+        if(head_yaw_position > 5*DEGREE2RADIAN)
+          arrivals_action_command_msg.data = 4;
+        if(head_yaw_position < -5*DEGREE2RADIAN)
+          arrivals_action_command_msg.data = 5;
       }
       arrivals_action_command_pub.publish(arrivals_action_command_msg);
+      arrivals_action_command_msg.data = 0; // initial!
     }
-
     ros::spinOnce();
     usleep(8000);
   }
-
   delete fifth_trj_x;
   delete fifth_trj_y;
   return 0;
