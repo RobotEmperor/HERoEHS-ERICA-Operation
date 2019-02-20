@@ -222,14 +222,20 @@ int main (int argc, char **argv)
           arrivals_action_command_msg.data = 1; // motion 1 starts!
         }
         action_movement_done_check = false;
+        usleep(2000000); //sleep 2s
         //rotation stops and action starts!
       }
       else
       {
+        action_movement_done_check = true;
         if(head_yaw_position > 5*DEGREE2RADIAN)
           arrivals_action_command_msg.data = 4;
         if(head_yaw_position < -5*DEGREE2RADIAN)
           arrivals_action_command_msg.data = 5;
+      }
+      if(!action_movement_done_check)
+      {
+        arrivals_action_command_msg.data = 0;
       }
       arrivals_action_command_pub.publish(arrivals_action_command_msg);
       arrivals_action_command_msg.data = 0; // initial!
@@ -237,6 +243,7 @@ int main (int argc, char **argv)
     ros::spinOnce();
     usleep(8000);
   }
+
   delete fifth_trj_x;
   delete fifth_trj_y;
   return 0;
