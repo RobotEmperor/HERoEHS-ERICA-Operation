@@ -214,7 +214,7 @@ int main (int argc, char **argv)
     }
     else // rotation starts!
     {
-      if(head_yaw_position > -5*DEGREE2RADIAN && head_yaw_position < 5*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
+      if(head_yaw_position > -10*DEGREE2RADIAN && head_yaw_position < 10*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
       {
         arrivals_action_command_msg.data = 0;
         if(action_movement_done_check && action_count == 1)
@@ -222,15 +222,16 @@ int main (int argc, char **argv)
           arrivals_action_command_msg.data = 1; // motion 1 starts!
         }
         action_movement_done_check = false;
-        usleep(2000000); //sleep 2s
+        arrivals_action_command_pub.publish(arrivals_action_command_msg);
+       // usleep(2000000); //sleep 2s
         //rotation stops and action starts!
       }
       else
       {
         action_movement_done_check = true;
-        if(head_yaw_position > 5*DEGREE2RADIAN)
+        if(head_yaw_position > 10*DEGREE2RADIAN)
           arrivals_action_command_msg.data = 4;
-        if(head_yaw_position < -5*DEGREE2RADIAN)
+        if(head_yaw_position < -10*DEGREE2RADIAN)
           arrivals_action_command_msg.data = 5;
       }
       if(!action_movement_done_check)
