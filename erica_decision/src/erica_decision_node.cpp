@@ -62,12 +62,15 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
       sampling_count ++;
     }
   }
+// ROS_INFO("s_count :: %d \n", sampling_count);
   if(sampling_count > lidar_sampling_count)
   {
     sampling_count = 0;
     people_detection_check = true;
     return;
   }
+
+//  ROS_INFO("sampling_count :: %d \n", sampling_count);
   sampling_count = 0;
   rotation_check = false;
   people_detection_check = false;
@@ -191,10 +194,10 @@ int main (int argc, char **argv)
 
   while(ros::ok())
   {
-    if(action_movement_done_check)
-      if(rotation_done_check == false)
+      if(!rotation_done_check)
       {
-        if(rotation_check == false)
+        ROS_INFO("rotation_check :: %d\n",rotation_check);
+        if(!rotation_check)
         {
           fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
           fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
@@ -228,7 +231,7 @@ int main (int argc, char **argv)
         }
         else // rotation starts!
         {
-          if(head_yaw_position > -10*DEGREE2RADIAN && head_yaw_position < 10*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
+          if(head_yaw_position > -5*DEGREE2RADIAN && head_yaw_position < 5*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
           {
             rotation_done_check = true;
             arrivals_action_command_msg.data = 0;
@@ -239,9 +242,9 @@ int main (int argc, char **argv)
           {
             rotation_done_check = false;
             //action_movement_done_check = false;
-            if(head_yaw_position > 10*DEGREE2RADIAN)
+            if(head_yaw_position > 5*DEGREE2RADIAN)
               arrivals_action_command_msg.data = 4;
-            if(head_yaw_position < -10*DEGREE2RADIAN)
+            if(head_yaw_position < -5*DEGREE2RADIAN)
               arrivals_action_command_msg.data = 5;
           }
           arrivals_action_command_pub.publish(arrivals_action_command_msg);
@@ -256,7 +259,7 @@ int main (int argc, char **argv)
           arrivals_action_command_msg.data = 1;
           arrivals_action_command_pub.publish(arrivals_action_command_msg);
         }
-        usleep(20000000); // 20s
+        usleep(5000000); // 20s
         rotation_done_check = false; // 재시작
         //waiting
       }
