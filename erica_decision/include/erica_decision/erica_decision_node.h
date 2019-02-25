@@ -69,6 +69,7 @@ int    lidar_sampling_count;
 
 //arrivals and rotation
 bool rotation_check;
+bool rotation_done_check;
 double head_yaw_position;
 
 //results

@@ -21,7 +21,8 @@ void initialize()
   sampling_count = 0;
   lidar_sampling_count = 0;
   simulation_check = false;
-  action_movement_done_check = true;
+  action_movement_done_check =false;
+  rotation_done_check = false;
   action_count = 1;
 
   fifth_trj_x = new heroehs_math::FifthOrderTrajectory();
@@ -85,8 +86,11 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   {
     temp_distance = sqrt(pow(fabs(msg->people_position[0].x),2)+ pow(fabs(msg->people_position[0].y),2));
 
-    if(std::isnan(temp_distance))
+    if(std::isnan(temp_distance)) //when there is no people, the robot stops.
     {
+      goal_desired_vector_x = 0;
+      goal_desired_vector_y = 0;
+      arrivals_action_command_msg.data = 0;
       return;
     }
 
@@ -187,66 +191,80 @@ int main (int argc, char **argv)
 
   while(ros::ok())
   {
-    if(rotation_check == false)
-    {
-      fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
-      fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
-      desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
-      desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
-
-      if(people_detection_check)
+    if(action_movement_done_check)
+      if(rotation_done_check == false)
       {
-        desired_vector_msg.position.x = 0;
-        desired_vector_msg.position.y = 0;
-        goal_desired_vector_x = 0;
-        goal_desired_vector_y = 0;
-
-        rotation_check = true;
-      }
-      if(simulation_check == true)
-      {
-        simulation_rviz(desired_vector_msg);
-        desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
-      }
-      arrivals_action_command_msg.data = 0;
-      arrivals_action_command_pub.publish(arrivals_action_command_msg);
-      desired_vector_pub.publish(desired_vector_msg);
-    }
-    else // rotation starts!
-    {
-      if(head_yaw_position > -10*DEGREE2RADIAN && head_yaw_position < 10*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
-      {
-        arrivals_action_command_msg.data = 0;
-        if(action_movement_done_check && action_count == 1)
+        if(rotation_check == false)
         {
-          arrivals_action_command_msg.data = 1; // motion 1 starts!
+          fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
+          fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
+          desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
+          desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
+
+          if(people_detection_check)
+          {
+            desired_vector_msg.position.x = 0;
+            desired_vector_msg.position.y = 0;
+            goal_desired_vector_x = 0;
+            goal_desired_vector_y = 0;
+            fifth_trj_x ->current_pose = 0;
+            fifth_trj_x ->current_velocity = 0;
+            fifth_trj_x ->current_acc = 0;
+            fifth_trj_x ->current_time = 0;
+            fifth_trj_y ->current_pose = 0;
+            fifth_trj_y ->current_velocity = 0;
+            fifth_trj_y ->current_acc = 0;
+            fifth_trj_y ->current_time = 0;
+            rotation_check = true;
+          }
+          if(simulation_check == true)
+          {
+            simulation_rviz(desired_vector_msg);
+            desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
+          }
+          arrivals_action_command_msg.data = 0;
+          arrivals_action_command_pub.publish(arrivals_action_command_msg);
+          desired_vector_pub.publish(desired_vector_msg);
         }
-        action_movement_done_check = false;
-        arrivals_action_command_pub.publish(arrivals_action_command_msg);
-       // usleep(2000000); //sleep 2s
-        //rotation stops and action starts!
+        else // rotation starts!
+        {
+          if(head_yaw_position > -10*DEGREE2RADIAN && head_yaw_position < 10*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
+          {
+            rotation_done_check = true;
+            arrivals_action_command_msg.data = 0;
+            arrivals_action_command_pub.publish(arrivals_action_command_msg);
+            //rotation stops and action starts!
+          }
+          else
+          {
+            rotation_done_check = false;
+            //action_movement_done_check = false;
+            if(head_yaw_position > 10*DEGREE2RADIAN)
+              arrivals_action_command_msg.data = 4;
+            if(head_yaw_position < -10*DEGREE2RADIAN)
+              arrivals_action_command_msg.data = 5;
+          }
+          arrivals_action_command_pub.publish(arrivals_action_command_msg);
+          arrivals_action_command_msg.data = 0; // initial!
+        }
+        usleep(8000);
       }
       else
       {
-        action_movement_done_check = true;
-        if(head_yaw_position > 10*DEGREE2RADIAN)
-          arrivals_action_command_msg.data = 4;
-        if(head_yaw_position < -10*DEGREE2RADIAN)
-          arrivals_action_command_msg.data = 5;
+        if(!action_movement_done_check && action_count == 1)
+        {
+          arrivals_action_command_msg.data = 1;
+          arrivals_action_command_pub.publish(arrivals_action_command_msg);
+        }
+        usleep(20000000); // 20s
+        rotation_done_check = false; // 재시작
+        //waiting
       }
-      if(!action_movement_done_check)
-      {
-        arrivals_action_command_msg.data = 0;
-      }
-      arrivals_action_command_pub.publish(arrivals_action_command_msg);
-      arrivals_action_command_msg.data = 0; // initial!
-    }
     ros::spinOnce();
-    usleep(8000);
   }
 
-  delete fifth_trj_x;
   delete fifth_trj_y;
+  delete fifth_trj_x;
   return 0;
 }
 
