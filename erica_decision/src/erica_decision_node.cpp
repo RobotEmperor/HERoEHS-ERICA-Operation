@@ -271,9 +271,11 @@ int main (int argc, char **argv)
         arrivals_action_command_pub.publish(arrivals_action_command_msg);
       }
       people_tracking_command_pub.publish(people_tracking_command_msg);
-      ros::spinOnce();
-      usleep(40000000); // 40s
-      ros::spinOnce();
+      for(int count = 0; count < 40000; count++)
+      {
+        usleep(1000);
+        ros::spinOnce();
+      }
       people_tracking_command_msg.data = "start";
       arrivals_action_command_msg.data = 0;
       arrivals_action_command_pub.publish(arrivals_action_command_msg);
