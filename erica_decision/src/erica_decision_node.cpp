@@ -111,12 +111,12 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
     }
   }
   // if person is close, the robot keeps going or stops.
-  if((temp_distance <= 0.6 && temp_distance > 0.4) || people_detection_check_lidar)
+  if((temp_distance <= 0.7) || people_detection_check_lidar)
   {
     people_detection_check = true;
     return;
   }
-  if(temp_distance <= detect_distance && temp_distance >=0.6)// detect_distance initial value 1.0
+  if(temp_distance <= detect_distance && temp_distance >=0.7)// detect_distance initial value 1.0
   {
     //unit vector
     goal_desired_vector_x = goal_desired_vector_x/temp_distance;
@@ -198,10 +198,10 @@ int main (int argc, char **argv)
   //sub motion done
   ros::Subscriber movement_done_sub   = nh.subscribe("/robotis/movement_done", 1, movement_done_callback);
 
+  people_tracking_command_msg.data = "start";
 
   while(ros::ok())
   {
-    people_tracking_command_msg.data = "start";
     if(!rotation_done_check)
     {
     //people_tracking_command_msg.data = "start";
@@ -271,6 +271,7 @@ int main (int argc, char **argv)
       }
       people_tracking_command_pub.publish(people_tracking_command_msg);
       usleep(40000000); // 60s
+      people_tracking_command_msg.data = "start";
       arrivals_action_command_msg.data = 0;
       arrivals_action_command_pub.publish(arrivals_action_command_msg);
       rotation_done_check = false; // 재시작
