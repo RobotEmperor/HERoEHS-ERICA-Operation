@@ -70,7 +70,6 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
     people_detection_check_lidar = true;
     return;
   }
-
   //  ROS_INFO("sampling_count :: %d \n", sampling_count);
   sampling_count = 0;
   //rotation_check = false;
@@ -110,7 +109,7 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
       }
     }
   }
-  ROS_INFO("temp_distance :: %f \n", temp_distance);
+  // ROS_INFO("temp_distance :: %f \n", temp_distance);
   // if person is close, the robot keeps going or stops.
   if((temp_distance <= 0.7))
   {
@@ -203,7 +202,7 @@ int main (int argc, char **argv)
 
   while(ros::ok())
   {
-    people_tracking_command_msg.data = "start";
+    //people_tracking_command_msg.data = "start";
     if(!rotation_done_check)
     {
     //people_tracking_command_msg.data = "start";
@@ -272,11 +271,13 @@ int main (int argc, char **argv)
         arrivals_action_command_pub.publish(arrivals_action_command_msg);
       }
       people_tracking_command_pub.publish(people_tracking_command_msg);
-      usleep(40000000); // 60s
+      ros::spinOnce();
+      usleep(40000000); // 40s
       people_tracking_command_msg.data = "start";
       arrivals_action_command_msg.data = 0;
       arrivals_action_command_pub.publish(arrivals_action_command_msg);
       rotation_done_check = false; // 재시작
+      people_detection_check = false;
       ROS_INFO("Restart! \n");
       //waiting
     }
