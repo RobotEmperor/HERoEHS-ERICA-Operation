@@ -259,7 +259,7 @@ int main (int argc, char **argv)
           arrivals_action_command_msg.data = 1;
           arrivals_action_command_pub.publish(arrivals_action_command_msg);
         }
-        usleep(5000000); // 20s
+        usleep(60000000); // 60s
         rotation_done_check = false; // 재시작
         //waiting
       }
