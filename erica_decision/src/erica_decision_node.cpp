@@ -203,10 +203,10 @@ int main (int argc, char **argv)
   {
     if(!rotation_done_check)
     {
+      people_tracking_command_msg.data = "start";
       //ROS_INFO("rotation_check :: %d\n",rotation_check);
       if(!rotation_check)
       {
-        people_tracking_command_msg.data = "start";
         fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
         fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
         desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
