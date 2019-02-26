@@ -77,6 +77,7 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
 }
 void people_position_callback(const erica_perception_msgs::PeoplePositionArray::ConstPtr& msg)
 {
+  rotation_check = false;
   double temp_distance = 0.0;
 
   if(msg->people_position.size() == 0)
@@ -109,7 +110,7 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
       }
     }
   }
-  // ROS_INFO("temp_distance :: %f \n", temp_distance);
+  ROS_INFO("temp_distance :: %f \n", temp_distance);
   // if person is close, the robot keeps going or stops.
   if((temp_distance <= 0.7))
   {
