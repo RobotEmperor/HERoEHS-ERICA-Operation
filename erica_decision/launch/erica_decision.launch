@@ -9,7 +9,7 @@
     
     <param name="lidar_detect_angle"     value="15.0"/>  <!--degree-->
     <param name="lidar_detect_distance"  value="0.6"/>  <!--m-->
-    <param name="lidar_sampling_count"   value="20" type="int"/>  <!--m-->
+    <param name="lidar_sampling_count"   value="15" type="int"/>  <!--m-->
  
      <!-- erica Manager -->
     <node name="erica_decision_node" pkg="erica_decision" type="erica_decision_node" output="screen"/>
