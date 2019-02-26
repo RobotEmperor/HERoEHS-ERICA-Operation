@@ -64,6 +64,7 @@ double detect_distance;
 
 //Lidar
 bool   people_detection_check;
+bool   people_detection_check_lidar;
 int    sampling_count;
 double lidar_detect_angle;
 double lidar_detect_distance; // To match sensor_msgs/ ranges variables type

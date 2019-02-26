@@ -14,6 +14,7 @@ void initialize()
   robot_trj_time  = 0.0;
   detect_distance = 0.0;
   people_detection_check = false;
+  people_detection_check_lidar = false;
   rotation_check = false;
   head_yaw_position = 0.0;
   lidar_detect_angle = 0.0;
@@ -51,7 +52,7 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
 }
 void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
-  /* for(int angle_number = 0; angle_number < lidar_detect_angle; angle_number++)
+   for(int angle_number = 0; angle_number < lidar_detect_angle; angle_number++)
   {
     if((double) msg->ranges[angle_number] < lidar_detect_distance) // CW check
     {
@@ -66,14 +67,14 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
   if(sampling_count > lidar_sampling_count)
   {
     sampling_count = 0;
-    people_detection_check = true;
+    people_detection_check_lidar = true;
     return;
-  }*/
+  }
 
   //  ROS_INFO("sampling_count :: %d \n", sampling_count);
   sampling_count = 0;
-  rotation_check = false;
-  people_detection_check = false;
+  //rotation_check = false;
+  people_detection_check_lidar = false;
 }
 void people_position_callback(const erica_perception_msgs::PeoplePositionArray::ConstPtr& msg)
 {
@@ -110,7 +111,7 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
     }
   }
   // if person is close, the robot keeps going or stops.
-  if(temp_distance <= 0.7 && temp_distance > 0.4)
+  if((temp_distance <= 0.7 && temp_distance > 0.5) || people_detection_check_lidar)
   {
     people_detection_check = true;
     return;
