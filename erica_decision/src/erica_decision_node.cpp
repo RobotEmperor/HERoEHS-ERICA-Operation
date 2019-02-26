@@ -201,9 +201,10 @@ int main (int argc, char **argv)
 
   while(ros::ok())
   {
+    people_tracking_command_msg.data = "start";
     if(!rotation_done_check)
     {
-      people_tracking_command_msg.data = "start";
+    //people_tracking_command_msg.data = "start";
       //ROS_INFO("rotation_check :: %d\n",rotation_check);
       if(!rotation_check)
       {
