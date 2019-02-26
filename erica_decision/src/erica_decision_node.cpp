@@ -262,6 +262,7 @@ int main (int argc, char **argv)
         arrivals_action_command_msg.data = 1;
         arrivals_action_command_pub.publish(arrivals_action_command_msg);
       }
+      people_tracking_command_pub.publish(people_tracking_command_msg);
       usleep(40000000); // 60s
       arrivals_action_command_msg.data = 0;
       arrivals_action_command_pub.publish(arrivals_action_command_msg);
