@@ -141,7 +141,7 @@ void present_joint_states_callback(const sensor_msgs::JointState::ConstPtr& msg)
 
 void movement_done_callback(const std_msgs::String::ConstPtr& msg)
 {
-  action_movement_done_check = true;
+  //action_movement_done_check = true;
   //action_count ++;
 }
 //simulation
