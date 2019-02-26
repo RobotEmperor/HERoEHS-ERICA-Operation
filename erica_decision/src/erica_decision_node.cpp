@@ -111,12 +111,12 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
     }
   }
   // if person is close, the robot keeps going or stops.
-  if((temp_distance <= 0.7 && temp_distance > 0.5) || people_detection_check_lidar)
+  if((temp_distance <= 0.6 && temp_distance > 0.4) || people_detection_check_lidar)
   {
     people_detection_check = true;
     return;
   }
-  if(temp_distance <= detect_distance && temp_distance >=0.7)// detect_distance initial value 1.0
+  if(temp_distance <= detect_distance && temp_distance >=0.6)// detect_distance initial value 1.0
   {
     //unit vector
     goal_desired_vector_x = goal_desired_vector_x/temp_distance;
