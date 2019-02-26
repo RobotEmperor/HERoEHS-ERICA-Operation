@@ -148,7 +148,7 @@ void present_joint_states_callback(const sensor_msgs::JointState::ConstPtr& msg)
 }
 void real_points_num_callback(const std_msgs::Int32::ConstPtr& msg)
 {
-  if(msg->data > 75000)
+  if(msg->data > 60000)
   {
     people_detection_check_zed = true;
   }
