@@ -62,7 +62,7 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
       sampling_count ++;
     }
   }
-// ROS_INFO("s_count :: %d \n", sampling_count);
+  // ROS_INFO("s_count :: %d \n", sampling_count);
   if(sampling_count > lidar_sampling_count)
   {
     sampling_count = 0;
@@ -70,7 +70,7 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
     return;
   }
 
-//  ROS_INFO("sampling_count :: %d \n", sampling_count);
+  //  ROS_INFO("sampling_count :: %d \n", sampling_count);
   sampling_count = 0;
   rotation_check = false;
   people_detection_check = false;
@@ -142,7 +142,7 @@ void present_joint_states_callback(const sensor_msgs::JointState::ConstPtr& msg)
 void movement_done_callback(const std_msgs::String::ConstPtr& msg)
 {
   action_movement_done_check = true;
-  action_count ++;
+  //action_count ++;
 }
 //simulation
 void simulation_rviz(geometry_msgs::Pose desired_vector) // cpp 분리
@@ -194,75 +194,78 @@ int main (int argc, char **argv)
 
   while(ros::ok())
   {
-      if(!rotation_done_check)
+    if(!rotation_done_check)
+    {
+      //ROS_INFO("rotation_check :: %d\n",rotation_check);
+      if(!rotation_check)
       {
-        ROS_INFO("rotation_check :: %d\n",rotation_check);
-        if(!rotation_check)
-        {
-          fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
-          fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
-          desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
-          desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
+        fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
+        fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
+        desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
+        desired_vector_msg.position.y = fifth_trj_y -> fifth_order_traj_gen(0,goal_desired_vector_y,0,0,0,0,0,robot_trj_time);
 
-          if(people_detection_check)
-          {
-            desired_vector_msg.position.x = 0;
-            desired_vector_msg.position.y = 0;
-            goal_desired_vector_x = 0;
-            goal_desired_vector_y = 0;
-            fifth_trj_x ->current_pose = 0;
-            fifth_trj_x ->current_velocity = 0;
-            fifth_trj_x ->current_acc = 0;
-            fifth_trj_x ->current_time = 0;
-            fifth_trj_y ->current_pose = 0;
-            fifth_trj_y ->current_velocity = 0;
-            fifth_trj_y ->current_acc = 0;
-            fifth_trj_y ->current_time = 0;
-            rotation_check = true;
-          }
-          if(simulation_check == true)
-          {
-            simulation_rviz(desired_vector_msg);
-            desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
-          }
+        if(people_detection_check)
+        {
+          desired_vector_msg.position.x = 0;
+          desired_vector_msg.position.y = 0;
+          goal_desired_vector_x = 0;
+          goal_desired_vector_y = 0;
+          fifth_trj_x ->current_pose = 0;
+          fifth_trj_x ->current_velocity = 0;
+          fifth_trj_x ->current_acc = 0;
+          fifth_trj_x ->current_time = 0;
+          fifth_trj_y ->current_pose = 0;
+          fifth_trj_y ->current_velocity = 0;
+          fifth_trj_y ->current_acc = 0;
+          fifth_trj_y ->current_time = 0;
+          rotation_check = true;
+        }
+        if(simulation_check == true)
+        {
+          simulation_rviz(desired_vector_msg);
+          desired_vector_rviz_pub.publish(desired_vector_rviz_msg);
+        }
+        arrivals_action_command_msg.data = 0;
+        arrivals_action_command_pub.publish(arrivals_action_command_msg);
+        desired_vector_pub.publish(desired_vector_msg);
+      }
+      else // rotation starts!
+      {
+        if(head_yaw_position > -5*DEGREE2RADIAN && head_yaw_position < 5*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
+        {
+          rotation_done_check = true;
           arrivals_action_command_msg.data = 0;
           arrivals_action_command_pub.publish(arrivals_action_command_msg);
-          desired_vector_pub.publish(desired_vector_msg);
+          //rotation stops and action starts!
         }
-        else // rotation starts!
+        else
         {
-          if(head_yaw_position > -5*DEGREE2RADIAN && head_yaw_position < 5*DEGREE2RADIAN)// if the yaw angle is closed in 0, stop
-          {
-            rotation_done_check = true;
-            arrivals_action_command_msg.data = 0;
-            arrivals_action_command_pub.publish(arrivals_action_command_msg);
-            //rotation stops and action starts!
-          }
-          else
-          {
-            rotation_done_check = false;
-            //action_movement_done_check = false;
-            if(head_yaw_position > 5*DEGREE2RADIAN)
-              arrivals_action_command_msg.data = 4;
-            if(head_yaw_position < -5*DEGREE2RADIAN)
-              arrivals_action_command_msg.data = 5;
-          }
-          arrivals_action_command_pub.publish(arrivals_action_command_msg);
-          arrivals_action_command_msg.data = 0; // initial!
+          rotation_done_check = false;
+          //action_movement_done_check = false;
+          if(head_yaw_position > 5*DEGREE2RADIAN)
+            arrivals_action_command_msg.data = 4;
+          if(head_yaw_position < -5*DEGREE2RADIAN)
+            arrivals_action_command_msg.data = 5;
         }
-        usleep(8000);
+        arrivals_action_command_pub.publish(arrivals_action_command_msg);
+        arrivals_action_command_msg.data = 0; // initial!
       }
-      else
+      usleep(8000);
+    }
+    else
+    {
+      if(!action_movement_done_check && action_count == 1)
       {
-        if(!action_movement_done_check && action_count == 1)
-        {
-          arrivals_action_command_msg.data = 1;
-          arrivals_action_command_pub.publish(arrivals_action_command_msg);
-        }
-        usleep(60000000); // 60s
-        rotation_done_check = false; // 재시작
-        //waiting
+        arrivals_action_command_msg.data = 1;
+        arrivals_action_command_pub.publish(arrivals_action_command_msg);
       }
+      usleep(60000000); // 60s
+      arrivals_action_command_msg.data = 0;
+      arrivals_action_command_pub.publish(arrivals_action_command_msg);
+      rotation_done_check = false; // 재시작
+      ROS_INFO("Restart! \n");
+      //waiting
+    }
     ros::spinOnce();
   }
 
