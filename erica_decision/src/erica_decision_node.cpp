@@ -110,6 +110,7 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
       }
     }
   }
+  ROS_INFO("temp_distance :: %f \n", temp_distance);
   // if person is close, the robot keeps going or stops.
   if((temp_distance <= 0.7))
   {
@@ -202,6 +203,7 @@ int main (int argc, char **argv)
 
   while(ros::ok())
   {
+    people_tracking_command_msg.data = "start";
     if(!rotation_done_check)
     {
     //people_tracking_command_msg.data = "start";
