@@ -16,6 +16,7 @@
 //ros_communication_message type
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int8.h>
+#include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -65,6 +66,7 @@ double detect_distance;
 //Lidar
 bool   people_detection_check;
 bool   people_detection_check_lidar;
+bool   people_detection_check_zed;
 int    sampling_count;
 double lidar_detect_angle;
 double lidar_detect_distance; // To match sensor_msgs/ ranges variables type
@@ -96,6 +98,8 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg);
 void people_position_callback(const erica_perception_msgs::PeoplePositionArray::ConstPtr& msg);
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg);
 void present_joint_states_callback(const sensor_msgs::JointState::ConstPtr& msg);
+void real_points_num_callback(const std_msgs::Int32::ConstPtr& msg);
+
 
 
 #endif /* ERICA_HEROEHS_ERICA_OPERATION_ERICA_DECISION_INCLUDE_ERICA_DECISION_ERICA_DECISION_NODE_H_ */

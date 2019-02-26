@@ -15,6 +15,7 @@ void initialize()
   detect_distance = 0.0;
   people_detection_check = false;
   people_detection_check_lidar = false;
+  people_detection_check_zed = false;
   rotation_check = false;
   head_yaw_position = 0.0;
   lidar_detect_angle = 0.0;
@@ -110,14 +111,14 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
       }
     }
   }
-  ROS_INFO("temp_distance :: %f \n", temp_distance);
+  // ROS_INFO("temp_distance :: %f \n", temp_distance);
   // if person is close, the robot keeps going or stops.
-  if((temp_distance <= 0.7))
+  if((temp_distance <= 0.8) || people_detection_check_zed)
   {
     people_detection_check = true;
     return;
   }
-  if(temp_distance <= detect_distance && temp_distance >=0.7)// detect_distance initial value 1.0
+  if(temp_distance <= detect_distance && temp_distance >=0.8)// detect_distance initial value 1.0
   {
     //unit vector
     goal_desired_vector_x = goal_desired_vector_x/temp_distance;
@@ -144,6 +145,15 @@ void present_joint_states_callback(const sensor_msgs::JointState::ConstPtr& msg)
       return;
     }
   }
+}
+void real_points_num_callback(const std_msgs::Int32::ConstPtr& msg)
+{
+  if(msg->data > 75000)
+  {
+    people_detection_check_zed = true;
+  }
+  else
+    people_detection_check_zed = false;
 }
 
 void movement_done_callback(const std_msgs::String::ConstPtr& msg)
@@ -195,6 +205,7 @@ int main (int argc, char **argv)
   ros::Subscriber scan_sub = nh.subscribe("/scan", 1, scan_callback);
   ros::Subscriber joy_sub   = nh.subscribe("/joy", 1, joy_callback);
   ros::Subscriber present_joint_states_sub   = nh.subscribe("/robotis/present_joint_states", 1, present_joint_states_callback);
+  ros::Subscriber real_points_num_sub   = nh.subscribe("/erica/real_points_num", 1, real_points_num_callback);
 
   //sub motion done
   ros::Subscriber movement_done_sub   = nh.subscribe("/robotis/movement_done", 1, movement_done_callback);
