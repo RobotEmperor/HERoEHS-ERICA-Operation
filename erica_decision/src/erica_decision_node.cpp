@@ -181,6 +181,7 @@ int main (int argc, char **argv)
   desired_vector_pub = nh.advertise<geometry_msgs::Pose>("/erica/desired_vector",1);
   desired_vector_rviz_pub = nh.advertise<geometry_msgs::PoseStamped>("/erica/desired_vector_rviz",1);
   arrivals_action_command_pub = nh.advertise<std_msgs::Int8>("/erica/arrivals_action_command",1);
+  people_tracking_command_pub = nh.advertise<std_msgs::String>("/erica/people_tracking_command",1);
 
   //sub
   ros::Subscriber people_position_sub = nh.subscribe("/erica/people_position", 100, people_position_callback);
@@ -199,6 +200,7 @@ int main (int argc, char **argv)
       //ROS_INFO("rotation_check :: %d\n",rotation_check);
       if(!rotation_check)
       {
+        people_tracking_command_msg.data = "start";
         fifth_trj_x->detect_change_final_value(goal_desired_vector_x, 0, robot_trj_time);
         fifth_trj_y->detect_change_final_value(goal_desired_vector_y, 0, robot_trj_time);
         desired_vector_msg.position.x = fifth_trj_x -> fifth_order_traj_gen(0,goal_desired_vector_x,0,0,0,0,0,robot_trj_time);
@@ -236,6 +238,7 @@ int main (int argc, char **argv)
           rotation_done_check = true;
           arrivals_action_command_msg.data = 0;
           arrivals_action_command_pub.publish(arrivals_action_command_msg);
+          people_tracking_command_msg.data = "stop";
           //rotation stops and action starts!
         }
         else
@@ -259,13 +262,14 @@ int main (int argc, char **argv)
         arrivals_action_command_msg.data = 1;
         arrivals_action_command_pub.publish(arrivals_action_command_msg);
       }
-      usleep(60000000); // 60s
+      usleep(40000000); // 60s
       arrivals_action_command_msg.data = 0;
       arrivals_action_command_pub.publish(arrivals_action_command_msg);
       rotation_done_check = false; // 재시작
       ROS_INFO("Restart! \n");
       //waiting
     }
+    people_tracking_command_pub.publish(people_tracking_command_msg);
     ros::spinOnce();
   }
 

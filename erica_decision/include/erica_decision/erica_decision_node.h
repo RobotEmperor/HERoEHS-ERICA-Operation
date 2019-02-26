@@ -38,13 +38,15 @@ ros::Publisher desired_vector_pub;
 ros::Publisher desired_vector_rviz_pub;
 
 ros::Publisher arrivals_action_command_pub;
-
+ros::Publisher people_tracking_command_pub;
 //gazebo
 
 //ros msg
 geometry_msgs::Pose desired_vector_msg;
 geometry_msgs::PoseStamped desired_vector_rviz_msg;
 std_msgs::Int8 arrivals_action_command_msg;
+std_msgs::String people_tracking_command_msg;
+
 
 //variables
 Eigen::Quaterniond rqyToQ;
