@@ -15,20 +15,20 @@
 
 script1: 
   joint_name: [r_arm_sh_p, r_arm_sh_r, r_arm_sh_y, r_arm_el_p, r_arm_wr_p, r_arm_wr_r]
-  cmd1: {cmd_name: mp3, cmd_arg: "/home/pino/Music/erica/hi_erica.MP3"}
+  cmd1: {cmd_name: mp3, cmd_arg: "/home/erica-nuc/Music/erica/1.MP3"}
   cmd2: {cmd_name: play,  cmd_arg: 2}
   cmd3: {cmd_name: sleep, cmd_arg: 2000}
-  cmd4: {cmd_name: mp3, cmd_arg: "/home/pino/Music/erica/from_erica_alice.MP3"}
-  cmd5: {cmd_name: sleep, cmd_arg: 5000}
-  cmd6: {cmd_name: mp3, cmd_arg: "/home/pino/Music/erica/welcome_chairman.MP3"}
+#  cmd4: {cmd_name: mp3, cmd_arg: "/home/pino/Music/erica/from_erica_alice.MP3"}
+#  cmd5: {cmd_name: sleep, cmd_arg: 5000}
+#  cmd6: {cmd_name: mp3, cmd_arg: "/home/pino/Music/erica/welcome_chairman.MP3"}
 
-script2:
-  joint_name: [head_pitch]
-  cmd1: {cmd_name: play,  cmd_arg: 10}
-  cmd2: {cmd_name: mp3, cmd_arg: "/home/pino/Music/erica/thank_you.MP3"}
+#script2:
+#  joint_name: [head_pitch]
+#  cmd1: {cmd_name: play,  cmd_arg: 10}
+#  cmd2: {cmd_name: mp3, cmd_arg: "/home/pino/Music/erica/thank_you.MP3"}
 
-script3: 
-  cmd1: {cmd_name: mp3, cmd_arg: "/home/pino/Music/erica/look_at_here.MP3"} 
+#script3: 
+#  cmd1: {cmd_name: mp3, cmd_arg: "/home/pino/Music/erica/look_at_here.MP3"} 
   
 #script4: 
 

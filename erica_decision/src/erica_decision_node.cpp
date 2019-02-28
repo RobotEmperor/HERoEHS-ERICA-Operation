@@ -113,12 +113,12 @@ void people_position_callback(const erica_perception_msgs::PeoplePositionArray::
   }
   // ROS_INFO("temp_distance :: %f \n", temp_distance);
   // if person is close, the robot keeps going or stops.
-  if((temp_distance <= 0.8) || people_detection_check_zed)
+  if((temp_distance <= 0.9) || people_detection_check_zed)
   {
     people_detection_check = true;
     return;
   }
-  if(temp_distance <= detect_distance && temp_distance >=0.8)// detect_distance initial value 1.0
+  if(temp_distance <= detect_distance && temp_distance >=0.9)// detect_distance initial value 1.0
   {
     //unit vector
     goal_desired_vector_x = goal_desired_vector_x/temp_distance;
